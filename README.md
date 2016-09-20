@@ -28,8 +28,8 @@ from the DOM only after we have successfully removed the object from the array.
 > - Send to gitHub (Push)
     - `git push origin v0.5`
 > - Create pull request
-    - Pull request should be made from v0.5 to **your repository's/teams** master branch
-
+    - Pull request should be made from v0.5 to **your repository's/teams** master branch  
+    
 
 ## Scope
 > - JS Functionality
