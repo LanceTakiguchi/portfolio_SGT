@@ -2,6 +2,12 @@
  * Define all global variables here
  */
 /**
+ * current_student_index - a global index number that tells what the index of the last student was
+ * Starts at negative 1 as when a student is added, it will always increment, putting the first student as index 0
+ * @type {number}
+ */
+var current_student_index = -1;
+/**
  * student_array - global array to hold student objects
  * @type {Array}
  */
@@ -40,6 +46,7 @@ function addStudent(){
     var grade = $("#studentGrade").val();
     var student = {student: name, course: course, grade: grade};
     student_array.push(student);
+    current_student_index++;
 
     var average = calculateAverage(); // ** TODO: reallocate this action to another part of the code
     $("div div small span").html(average);
