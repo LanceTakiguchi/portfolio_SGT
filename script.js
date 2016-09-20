@@ -26,7 +26,7 @@ function cancelClicked(){
     $("#cancelButton").click(function(){
         $("#studentName").val("");
         $("#course").val("");
-        $("studentGrade").val("");
+        $("#studentGrade").val("");
     });
 }
 /**
@@ -90,12 +90,10 @@ function addStudentToDom(studentObj){
     //
     // $('.student_list tbody').append(content);
 
+    //TODO: Make this display on the DOM
+    var content = "<tr><td>" + studentObj.student + "</td></tr>";
 
-    //** Take 3:
-    // var table = $('<table></table>');
-    // var content = "<tr><td>" + studentObj.student + "</td></tr>";
-    // table.append(content);
-    // $('.student_list tbody').append(table);
+    $(".student_list tbody").append(content);
 }
 /**
  * reset - resets the application to initial state. Global variables reset, DOM get reset to initial load state
