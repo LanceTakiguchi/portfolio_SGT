@@ -22,7 +22,8 @@ var inputIds = [];
  */
 function addClicked(){
     $("#addButton").click(function(){
-        addStudent();
+        addStudent(); // ** Add student
+        deleteClicked(); // ** Add delete functionality
     });
 }
 /**
@@ -34,6 +35,18 @@ function cancelClicked(){
         $("#course").val("");
         $("#studentGrade").val("");
     });
+}
+/**
+ * deleteClicked - Event Handler when user clicks the cancel button, should remove from student array and delete the student's DOM row
+ */
+function deleteClicked(){
+    $(".student-list .btn.btn-danger").click(function(){
+        $(this).parent().parent().remove(); // ** Deletes the row it's in
+        removeStudent();
+    });
+}
+function removeStudent(){
+    console.log("Remove the student!")
 }
 /**
  * addStudent - creates a student objects based on input fields in the form and adds the object to global student array
