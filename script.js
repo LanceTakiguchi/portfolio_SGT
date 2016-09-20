@@ -100,7 +100,8 @@ function addStudentToDom(studentObj){
     var student_column = "<td>" + studentObj.student + "</td>";
     var course_column = "<td>" + studentObj.course + "</td>";
     var grade_column = "<td>" + studentObj.grade + "</td>";
-    var row = "<tr>" + student_column + course_column + grade_column + "</tr>";
+    var delete_column = "<td><button type='button' class='btn btn-danger' onclick=''>Delete</button></td>";
+    var row = "<tr>" + student_column + course_column + grade_column + delete_column + "</tr>";
     $(".student-list tbody").append(row);
 }
 /**
