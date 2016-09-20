@@ -44,7 +44,6 @@ function addStudent(){
     var average = calculateAverage(); // ** TODO: reallocate this action to another part of the code
     $("div div small span").html(average);
     addStudentToDom(student);
-    //TODO: Display student and average
     return undefined; //** QUESTION: ??? Why?
 }
 /**
@@ -91,9 +90,11 @@ function addStudentToDom(studentObj){
     // $('.student_list tbody').append(content);
 
     //TODO: Make this display on the DOM
-    var content = "<tr><td>" + studentObj.student + "</td></tr>";
-
-    $(".student_list tbody").append(content);
+    var student_column = "<td>" + studentObj.student + "</td>";
+    var course_column = "<td>" + studentObj.course + "</td>";
+    var grade_column = "<td>" + studentObj.grade + "</td>";
+    var row = "<tr>" + student_column + course_column + grade_column + "</tr>";
+    $(".student-list tbody").append(row);
 }
 /**
  * reset - resets the application to initial state. Global variables reset, DOM get reset to initial load state
