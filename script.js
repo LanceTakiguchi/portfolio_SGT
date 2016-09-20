@@ -60,7 +60,7 @@ function calculateAverage(){
     for(var index in student_array){
         sum += Number(student_array[index].grade);
     }
-    return sum / student_array.length;
+    return Math.round(sum / student_array.length);
 }
 /**
  * updateData - centralized function to update the average and call student list update
