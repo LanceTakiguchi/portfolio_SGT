@@ -40,13 +40,17 @@ function cancelClicked(){
  * deleteClicked - Event Handler when user clicks the cancel button, should remove from student array and delete the student's DOM row
  */
 function deleteClicked(){
-    $(".student-list .btn.btn-danger").click(function(){
+    $(".student-list .btn.btn-danger:last").click(function(){
+        var delete_index = $(this).parent().parent().index();
+        console.log(delete_index);
+        //TODO: Fix repeated deleteClicked calls
         $(this).parent().parent().remove(); // ** Deletes the row it's in
-        removeStudent();
+        // removeStudent(delete_index);
     });
 }
-function removeStudent(){
-    console.log("Remove the student!")
+function removeStudent(index){
+    student_array.slice(index, 1);
+    console.log("Remove the student!");
 }
 /**
  * addStudent - creates a student objects based on input fields in the form and adds the object to global student array
