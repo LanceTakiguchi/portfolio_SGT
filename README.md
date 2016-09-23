@@ -76,9 +76,3 @@ Version 2.0 adds more CRUD functionality.  Previously you added R (Read), and no
                 - 'server': force a server failure (error 500).  Server will not respond with ANY data except the error code (as opposed to 200 / 304).
                 - 'request': the request failed.  This mimics any number of errors, from deleting a student that doesn't exist, to trying to add a student when you don't have access, to the database being offline.
                 - 'timeout': force the request to take 10 seconds.  No answer will be given for 10 seconds.  At that time, the normal operation will occur.
-            
-        
-
-
-
-    
