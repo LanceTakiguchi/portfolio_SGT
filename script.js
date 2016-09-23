@@ -36,6 +36,11 @@ function cancelClicked(){
         $("#studentGrade").val("");
     });
 }
+function serverClicked(){
+    $("#serverButton").click(function(){
+        Call_LearningFuze();
+    });
+}
 /**
  * deleteClicked - Event Handler when user clicks the cancel button, should remove from student array and delete the student's DOM row
  */
@@ -120,10 +125,28 @@ function reset(){
     //TODO: reset inputs
     //TODO: reset dom
 }
+function Call_LearningFuze(){ // ** TODO Grab the response (Might need API key)
+    console.log('Calling LearningFuze');
+    $.ajax({
+        url: 'http://s-apis.learningfuze.com/sgt/get',
+        dataType: 'json',
+        method: 'post',
+        cache: false,
+        data: {api_key: "Yd2V1lB6e5"},
+        success: function(response){
+            console.log('Data retrieval successfully');
+            console.log(response);
+        },
+        error: function(response){
+            console.log('ajax error!')
+        }
+    });  //end of the ajax call
+}
 /**
  * Listen for the document to load and reset the data to the initial state
  */
 $(document).ready(function () {
     addClicked();
     cancelClicked();
+    serverClicked();
 });
