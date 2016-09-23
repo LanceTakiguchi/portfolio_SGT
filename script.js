@@ -17,6 +17,7 @@ var student_array = [];
  * @type {string[]}
  */
 var inputIds = [];
+var ajax_data = null;
 /**
  * addClicked - Event Handler when user clicks the add button
  */
@@ -39,6 +40,23 @@ function cancelClicked(){
 function serverClicked(){
     $("#serverButton").click(function(){
         Call_LearningFuze();
+        function wait(){
+            if (ajax_data == null){
+                setTimeout(wait, 10); // ** Note: I feel like a recursion genius XD
+            }else {
+                for (var student_index in ajax_data.data) {
+                    var name = ajax_data.data[student_index].name;
+                    var course = ajax_data.data[student_index].course;
+                    var grade = ajax_data.data[student_index].grade;
+                    var student = {student: name, course: course, grade: grade};
+                    student_array.push(student);
+                    current_student_index++;
+                    displayAverage();
+                    addStudentToDom(student);
+                }
+            }
+        }
+        wait();
     });
 }
 /**
@@ -46,7 +64,7 @@ function serverClicked(){
  */
 function deleteClicked(){
     $(".student-list .btn.btn-danger:last").click(function(){ // ** If not last, it will give every existing delete button a new click handler.
-        var delete_index = $(this).parent().parent().index();;
+        var delete_index = $(this).parent().parent().index();
         $(this).parent().parent().remove(); // ** Deletes the row it's in
     });
 }
@@ -69,11 +87,12 @@ function addStudent(){
     var student = {student: name, course: course, grade: grade};
     student_array.push(student);
     current_student_index++;
-
+    displayAverage();
+    return undefined; // ** Why?
+}
+function displayAverage(){
     var average = calculateAverage(); // ** TODO: reallocate this action to another part of the code
     $("div div small span").html(average);
-    addStudentToDom(student);
-    return undefined; //** QUESTION: ??? Why?
 }
 /**
  * clearAddStudentForm - clears out the form values based on inputIds variable
@@ -126,7 +145,8 @@ function reset(){
     //TODO: reset dom
 }
 function Call_LearningFuze(){ // ** TODO Grab the response (Might need API key)
-    console.log('Calling LearningFuze');
+    //console.log('Calling LearningFuze');
+    var ajax_return = null; // Will hold the AJAX return
     $.ajax({
         url: 'http://s-apis.learningfuze.com/sgt/get',
         dataType: 'json',
@@ -134,8 +154,8 @@ function Call_LearningFuze(){ // ** TODO Grab the response (Might need API key)
         cache: false,
         data: {api_key: "Yd2V1lB6e5"},
         success: function(response){
-            console.log('Data retrieval successfully');
-            console.log(response);
+            // console.log('Data retrieval successfully');
+            ajax_data = response;
         },
         error: function(response){
             console.log('ajax error!')
