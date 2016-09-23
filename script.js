@@ -23,6 +23,11 @@ var inputIds = [];
  */
 var ajax_data = null;
 /**
+ * ajax_sent - Used to hold the id returned from beaming up a student
+ * @type {null}
+ */
+var ajax_sent = null;
+/**
  * addClicked - Event Handler when user clicks the add button
  */
 function addClicked(){
@@ -72,8 +77,10 @@ function obtainServerData(){
                 var name = ajax_data.data[student_index].name;
                 var course = ajax_data.data[student_index].course;
                 var grade = ajax_data.data[student_index].grade;
-                var student = {student: name, course: course, grade: grade};
+                var id = ajax_data.data[student_index].id;
+                var student = {student: name, course: course, grade: grade, id:id};
                 student_array.push(student);
+                inputIds.push(id);
                 current_student_index++;
                 addStudentToDom(student);
                 displayAverage();
@@ -109,23 +116,11 @@ function addStudent(){
     var name = $("#studentName").val();
     var course = $("#course").val();
     var grade = $("#studentGrade").val();
-    var new_id = 0;
-    if(inputIds.length === 0){
-        inputIds.splice(0, 0, new_id);
-    }else{
-        for(var id_index in inputIds){
-            if(new_id == inputIds[id_index]){
-                new_id++;
-            }else{
-                inputIds.splice(id_index, 0, new_id);
-                break;
-            }
-        }
-    }
-    var student = {student: name, course: course, grade: grade, id: new_id};
+    var student = {student: name, course: course, grade: Number(grade)};
     student_array.push(student);
     current_student_index++;
     addStudentToDom(student);
+    beamMeUpScotty(student);
     displayAverage();
     return undefined; // ** Why?
 }
@@ -207,6 +202,52 @@ function Call_LearningFuze(){ // ** TODO Grab the response (Might need API key)
             console.log('ajax error!')
         }
     });  //end of the ajax call
+}
+function beamMeUpScotty(enterprise_crew){
+    console.log('Beam me up, Scotty!');
+    var ajax_return = null; // Will hold the AJAX return
+    // $.ajax({
+    //     url: 's-apis.learningfuze.com/sgt/create',
+    //     dataType: 'json',
+    //     method: 'POST',
+    //     cache: false,
+    //     data: {
+    //         api_key: "Yd2V1lB6e5",
+    //         name: "Han Solo",
+    //         course: "Imperial Flight School",
+    //         grade: 99
+    //     },
+    //     success: function(response){
+    //         console.log('Ayy Captain');
+    //         console.log("Coming up now: ", ajax_data);
+    //         ajax_sent = response;
+    //     },
+    //     error: function(response){
+    //         console.log("I can't captain!");
+    //          console.log(response);
+    //     }
+    // });  //end of the ajax call
+
+    var settings = {
+        "async": true,
+        "crossDomain": true,
+        "url": "http://s-apis.learningfuze.com/sgt/create",
+        "method": "POST",
+        "headers": {
+            "content-type": "application/x-www-form-urlencoded",
+        },
+        "data": {
+            "api.key": "Yd2V1lB6e5",
+            "name": String(enterprise_crew.student),
+            "course": String(enterprise_crew.course),
+            "grade": Number(enterprise_crew.grade)
+        }
+    };
+
+    $.ajax(settings).done(function(response){
+        ajax_return = response;
+    });
+
 }
 /**
  * OnlyNumberGrades - Limits the grade input to just numbers and action keys
