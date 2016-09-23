@@ -206,48 +206,26 @@ function Call_LearningFuze(){ // ** TODO Grab the response (Might need API key)
 function beamMeUpScotty(enterprise_crew){
     console.log('Beam me up, Scotty!');
     var ajax_return = null; // Will hold the AJAX return
-    // $.ajax({
-    //     url: 's-apis.learningfuze.com/sgt/create',
-    //     dataType: 'json',
-    //     method: 'POST',
-    //     cache: false,
-    //     data: {
-    //         api_key: "Yd2V1lB6e5",
-    //         name: "Han Solo",
-    //         course: "Imperial Flight School",
-    //         grade: 99
-    //     },
-    //     success: function(response){
-    //         console.log('Ayy Captain');
-    //         console.log("Coming up now: ", ajax_data);
-    //         ajax_sent = response;
-    //     },
-    //     error: function(response){
-    //         console.log("I can't captain!");
-    //          console.log(response);
-    //     }
-    // });  //end of the ajax call
-
-    var settings = {
-        "async": true,
-        "crossDomain": true,
-        "url": "http://s-apis.learningfuze.com/sgt/create",
-        "method": "POST",
-        "headers": {
-            "content-type": "application/x-www-form-urlencoded",
+    $.ajax({
+        url: 'http://s-apis.learningfuze.com/sgt/create',
+        dataType: 'json',
+        method: 'POST',
+        data: {
+            api_key: "Yd2V1lB6e5",
+            name: enterprise_crew.student,
+            course: enterprise_crew.course,
+            grade: enterprise_crew.grade
         },
-        "data": {
-            "api.key": "Yd2V1lB6e5",
-            "name": String(enterprise_crew.student),
-            "course": String(enterprise_crew.course),
-            "grade": Number(enterprise_crew.grade)
+        success: function(beamed){
+            // console.log('Ayy Captain');
+            // console.log("Coming up now: ", beamed);
+            ajax_sent = beamed;
+        },
+        error: function(fried){
+            console.log("I can't captain!");
+            console.log(fried);
         }
-    };
-
-    $.ajax(settings).done(function(response){
-        ajax_return = response;
-    });
-
+    });  //end of the ajax call
 }
 /**
  * OnlyNumberGrades - Limits the grade input to just numbers and action keys
