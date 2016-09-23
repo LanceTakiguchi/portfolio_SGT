@@ -45,4 +45,3 @@ Version 1.0 picks up where 0.5 left off. You will now be populating records from
         - output:
             success: (boolean) whether the operation succeeded
             data: (array) every student available on the database
-    
