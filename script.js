@@ -17,6 +17,10 @@ var student_array = [];
  * @type {string[]}
  */
 var inputIds = [];
+/**
+ * ajax_data - Used to hold the results from the server call
+ * @type {null} - Will be an object with and array with an object
+ */
 var ajax_data = null;
 /**
  * addClicked - Event Handler when user clicks the add button
@@ -37,13 +41,20 @@ function cancelClicked(){
         $("#studentGrade").val("");
     });
 }
+/**
+ * The functionality of the "Get Server Data" button. Waits for results from the AJAX call and then adds the students to the array and table
+ */
 function serverClicked(){
     $("#serverButton").click(function(){
         Call_LearningFuze();
+        /**
+         * Used to wait for the ajax data to be saved in the global ajax_data
+         */
         function wait(){
             if (ajax_data == null){
                 setTimeout(wait, 10); // ** Note: I feel like a recursion genius XD
             }else {
+                // ** The data was saved. Now use the data.
                 for (var student_index in ajax_data.data) {
                     var name = ajax_data.data[student_index].name;
                     var course = ajax_data.data[student_index].course;
@@ -57,7 +68,7 @@ function serverClicked(){
                 }
             }
         }
-        wait();
+        wait(); // ** Recursive call to check again for the ajax data.
     });
 }
 /**
@@ -93,6 +104,9 @@ function addStudent(){
     displayAverage();
     return undefined; // ** Why?
 }
+/**
+ * Function to display the calculated average onto the DOM
+ */
 function displayAverage(){
     var average = calculateAverage(); // ** TODO: reallocate this action to another part of the code
     $("div div small span").html(average);
