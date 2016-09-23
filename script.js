@@ -41,16 +41,16 @@ function cancelClicked(){
  */
 function deleteClicked(){
     $(".student-list .btn.btn-danger:last").click(function(){ // ** If not last, it will give every existing delete button a new click handler.
-        var delete_index = $(this).parent().parent().index();
-        console.log(delete_index);
-        //TODO: Fix repeated deleteClicked calls
+        var delete_index = $(this).parent().parent().index();;
         $(this).parent().parent().remove(); // ** Deletes the row it's in
-        // removeStudent(delete_index);
     });
 }
+/**
+ * Removes the student object from student_array
+ * @param {number} index The index which holds the student whose existence is no longer tolerable.
+ */
 function removeStudent(index){
-    student_array.slice(index, 1);
-    console.log("Remove the student!");
+    student_array.slice(index, 1);;
 }
 /**
  * addStudent - creates a student objects based on input fields in the form and adds the object to global student array
@@ -104,16 +104,6 @@ function updateStudentList(){
  * @param studentObj
  */
 function addStudentToDom(studentObj){
-    // var content = "<table>";
-    // content += "<tr><td>" + studentObj.student + "</td></tr>";
-    // // for(var i = 0; i < student_array.length; i++){
-    // //     content += "<tr><td>" + student_array[i].student +  i + "</td></tr>";
-    // // }
-    // content += "</table>";
-    //
-    // $('.student_list tbody').append(content);
-
-    //TODO: Make this display on the DOM
     var student_column = "<td>" + studentObj.student + "</td>";
     var course_column = "<td>" + studentObj.course + "</td>";
     var grade_column = "<td>" + studentObj.grade + "</td>";
