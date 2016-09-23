@@ -42,34 +42,38 @@ function cancelClicked(){
     });
 }
 /**
- * The functionality of the "Get Server Data" button. Waits for results from the AJAX call and then adds the students to the array and table
+ * Grab server data on click
  */
 function serverClicked(){
-    $("#serverButton").click(function(){
-        Call_LearningFuze();
-        /**
-         * Used to wait for the ajax data to be saved in the global ajax_data
-         */
-        function wait(){
-            if (ajax_data == null){
-                setTimeout(wait, 10); // ** Note: I feel like a recursion genius XD
-            }else {
-                // ** The data was saved. Now use the data.
-                for (var student_index in ajax_data.data) {
-                    var name = ajax_data.data[student_index].name;
-                    var course = ajax_data.data[student_index].course;
-                    var grade = ajax_data.data[student_index].grade;
-                    var student = {student: name, course: course, grade: grade};
-                    student_array.push(student);
-                    current_student_index++;
-                    addStudentToDom(student);
-                    displayAverage();
-                    deleteClicked();
-                }
+    $("#serverButton").click(obtainServerData);
+}
+/**
+ * The functionality of the "Get Server Data" button. Waits for results from the AJAX call and then adds the students to the array and table
+ */
+function obtainServerData(){
+    Call_LearningFuze();
+    /**
+     * Used to wait for the ajax data to be saved in the global ajax_data
+     */
+    function wait(){
+        if (ajax_data == null){
+            setTimeout(wait, 10); // ** Note: I feel like a recursion genius XD
+        }else {
+            // ** The data was saved. Now use the data.
+            for (var student_index in ajax_data.data) {
+                var name = ajax_data.data[student_index].name;
+                var course = ajax_data.data[student_index].course;
+                var grade = ajax_data.data[student_index].grade;
+                var student = {student: name, course: course, grade: grade};
+                student_array.push(student);
+                current_student_index++;
+                addStudentToDom(student);
+                displayAverage();
+                deleteClicked();
             }
         }
-        wait(); // ** Recursive call to check again for the ajax data.
-    });
+    }
+    wait(); // ** Recursive call to check again for the ajax data.
 }
 /**
  * deleteClicked - Event Handler when user clicks the cancel button, should remove from student array and delete the student's DOM row
@@ -97,7 +101,20 @@ function addStudent(){
     var name = $("#studentName").val();
     var course = $("#course").val();
     var grade = $("#studentGrade").val();
-    var student = {student: name, course: course, grade: grade};
+    var new_id = 0;
+    if(inputIds.length === 0){
+        inputIds.splice(0, 0, new_id);
+    }else{
+        for(var id_index in inputIds){
+            if(new_id == inputIds[id_index]){
+                new_id++;
+            }else{
+                inputIds.splice(id_index, 0, new_id);
+                break;
+            }
+        }
+    }
+    var student = {student: name, course: course, grade: grade, id: new_id};
     student_array.push(student);
     current_student_index++;
     addStudentToDom(student);
@@ -186,4 +203,5 @@ $(document).ready(function () {
     addClicked();
     cancelClicked();
     serverClicked();
+    obtainServerData();
 });
