@@ -51,8 +51,9 @@ function serverClicked(){
                     var student = {student: name, course: course, grade: grade};
                     student_array.push(student);
                     current_student_index++;
-                    displayAverage();
                     addStudentToDom(student);
+                    displayAverage();
+                    deleteClicked();
                 }
             }
         }
@@ -65,6 +66,7 @@ function serverClicked(){
 function deleteClicked(){
     $(".student-list .btn.btn-danger:last").click(function(){ // ** If not last, it will give every existing delete button a new click handler.
         var delete_index = $(this).parent().parent().index();
+        student_array.splice(delete_index, 1);
         $(this).parent().parent().remove(); // ** Deletes the row it's in
     });
 }
@@ -87,6 +89,7 @@ function addStudent(){
     var student = {student: name, course: course, grade: grade};
     student_array.push(student);
     current_student_index++;
+    addStudentToDom(student);
     displayAverage();
     return undefined; // ** Why?
 }
