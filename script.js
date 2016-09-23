@@ -27,8 +27,16 @@ var ajax_data = null;
  */
 function addClicked(){
     $("#addButton").click(function(){
-        addStudent(); // ** Add student
-        deleteClicked(); // ** Add delete functionality
+        if ( parseInt( $("#studentGrade").val() ) < 0 ) {
+            alert( 'Number too low.' );
+            $("#studentGrade").val("");
+        }else if ( parseInt( $("#studentGrade").val() ) > 100 ) {
+            alert( 'Number too high.' );
+            $("#studentGrade").val("");
+        }else{
+            addStudent(); // ** Add student
+            deleteClicked(); // ** Add delete functionality
+        }
     });
 }
 /**
@@ -178,6 +186,10 @@ function reset(){
     //TODO: reset inputs
     //TODO: reset dom
 }
+/**
+ * Call_LearningFuze - Calls the LearningFuze server to get online table
+ * @constructor
+ */
 function Call_LearningFuze(){ // ** TODO Grab the response (Might need API key)
     //console.log('Calling LearningFuze');
     var ajax_return = null; // Will hold the AJAX return
@@ -197,6 +209,31 @@ function Call_LearningFuze(){ // ** TODO Grab the response (Might need API key)
     });  //end of the ajax call
 }
 /**
+ * OnlyNumberGrades - Limits the grade input to just numbers and action keys
+ * @constructor
+ */
+function OnlyNumberGrades(){
+    $("#studentGrade").keydown(function (e) {
+        // Allow: backspace, delete, tab, escape, enter and .
+        if ($.inArray(e.keyCode, [46, 8, 9, 27, 13, 110]) !== -1 ||
+            // Allow: Ctrl+A
+            (e.keyCode == 65 && e.ctrlKey === true) ||
+            // Allow: Ctrl+C
+            (e.keyCode == 67 && e.ctrlKey === true) ||
+            // Allow: Ctrl+X
+            (e.keyCode == 88 && e.ctrlKey === true) ||
+            // Allow: home, end, left, right
+            (e.keyCode >= 35 && e.keyCode <= 39)) {
+            // let it happen, don't do anything
+            return;
+        }
+        // Ensure that it is a number and stop the keypress
+        if ((e.shiftKey || (e.keyCode < 48 || e.keyCode > 57)) && (e.keyCode < 96 || e.keyCode > 105)) {
+            e.preventDefault();
+        }
+    });
+}
+/**
  * Listen for the document to load and reset the data to the initial state
  */
 $(document).ready(function () {
@@ -204,4 +241,5 @@ $(document).ready(function () {
     cancelClicked();
     serverClicked();
     obtainServerData();
+    OnlyNumberGrades();
 });
