@@ -27,6 +27,7 @@ var ajax_data = null;
  * @type {null}
  */
 var ajax_sent = null;
+var old_ajax_sent = null;
 /**
  * addClicked - Event Handler when user clicks the add button
  */
@@ -78,7 +79,7 @@ function obtainServerData(){
                 var course = ajax_data.data[student_index].course;
                 var grade = ajax_data.data[student_index].grade;
                 var id = ajax_data.data[student_index].id;
-                var student = {student: name, course: course, grade: grade, id:id};
+                var student = {name: name, course: course, grade: grade, id:id};
                 student_array.push(student);
                 inputIds.push(id);
                 current_student_index++;
@@ -116,12 +117,23 @@ function addStudent(){
     var name = $("#studentName").val();
     var course = $("#course").val();
     var grade = $("#studentGrade").val();
-    var student = {student: name, course: course, grade: Number(grade)};
-    student_array.push(student);
-    current_student_index++;
-    addStudentToDom(student);
-    beamMeUpScotty(student);
-    displayAverage();
+    var student = {name: name, course: course, grade: Number(grade)};
+    sendStudentData(student); // ** Send to LearningFuze server
+
+    function wait(){
+        if (ajax_sent == null || old_ajax_sent == ajax_sent.new_id){
+            setTimeout(wait, 10); // ** Note: I feel like a recursion genius XD
+        }else {
+            // ** The data was saved. Now use the data.
+            old_ajax_sent = ajax_sent.new_id;
+            student.id = ajax_sent.new_id;
+            student_array.push(student);
+            current_student_index++;
+            addStudentToDom(student);
+            displayAverage();
+        }
+    }
+    wait(); // ** Recursive call to check again for the ajax data.
     return undefined; // ** Why?
 }
 /**
@@ -165,11 +177,12 @@ function updateStudentList(){
  * @param studentObj
  */
 function addStudentToDom(studentObj){
-    var student_column = "<td>" + studentObj.student + "</td>";
+    var student_column = "<td>" + studentObj.name + "</td>";
     var course_column = "<td>" + studentObj.course + "</td>";
     var grade_column = "<td>" + studentObj.grade + "</td>";
     var delete_column = "<td><button type='button' class='btn btn-danger' onclick=''>Delete</button></td>";
-    var row = "<tr>" + student_column + course_column + grade_column + delete_column + "</tr>";
+    var row = $("<tr>").attr("id", studentObj.id);
+    row.append(student_column + course_column + grade_column + delete_column);
     $(".student-list tbody").append(row);
 }
 /**
@@ -185,7 +198,7 @@ function reset(){
  * Call_LearningFuze - Calls the LearningFuze server to get online table
  * @constructor
  */
-function Call_LearningFuze(){ // ** TODO Grab the response (Might need API key)
+function Call_LearningFuze(){ 
     //console.log('Calling LearningFuze');
     var ajax_return = null; // Will hold the AJAX return
     $.ajax({
@@ -203,8 +216,8 @@ function Call_LearningFuze(){ // ** TODO Grab the response (Might need API key)
         }
     });  //end of the ajax call
 }
-function beamMeUpScotty(enterprise_crew){
-    console.log('Beam me up, Scotty!');
+function sendStudentData(student){
+    console.log("Sending student data!");
     var ajax_return = null; // Will hold the AJAX return
     $.ajax({
         url: 'http://s-apis.learningfuze.com/sgt/create',
@@ -212,18 +225,18 @@ function beamMeUpScotty(enterprise_crew){
         method: 'POST',
         data: {
             api_key: "Yd2V1lB6e5",
-            name: enterprise_crew.student,
-            course: enterprise_crew.course,
-            grade: enterprise_crew.grade
+            name: student.name,
+            course: student.course,
+            grade: student.grade
         },
-        success: function(beamed){
-            // console.log('Ayy Captain');
-            // console.log("Coming up now: ", beamed);
-            ajax_sent = beamed;
+        success: function(return_id){
+            // console.log('sendStudentData Sucessful!');
+            // console.log("Student's new ID: ", returnId);
+            ajax_sent = return_id;
         },
-        error: function(fried){
-            console.log("I can't captain!");
-            console.log(fried);
+        error: function(fail_report){
+            console.log("sendStudentData AJAX error!");
+            console.log(fail_report);
         }
     });  //end of the ajax call
 }
@@ -233,7 +246,7 @@ function beamMeUpScotty(enterprise_crew){
  */
 function OnlyNumberGrades(){
     $("#studentGrade").keydown(function (e) {
-        // Allow: backspace, delete, tab, escape, enter and .
+        // Allow: backspace, delete, tab, escape, and enter
         if ($.inArray(e.keyCode, [46, 8, 9, 27, 13, 110]) !== -1 ||
             // Allow: Ctrl+A
             (e.keyCode == 65 && e.ctrlKey === true) ||
