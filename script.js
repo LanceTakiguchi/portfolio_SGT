@@ -96,9 +96,20 @@ function obtainServerData(){
  */
 function deleteClicked(){
     $(".student-list .btn.btn-danger:last").click(function(){ // ** If not last, it will give every existing delete button a new click handler.
-        var delete_index = $(this).parent().parent().index();
-        student_array.splice(delete_index, 1);
-        $(this).parent().parent().remove(); // ** Deletes the row it's in
+        var delete_id = $(this).parent().parent()[0].id;
+        for (var student_index in student_array){
+            if (student_array[student_index].id == delete_id){
+                student_array.splice(student_index, 1);
+                break;
+            }
+        }
+        for (var id_index in inputIds){
+            if (inputIds[id_index] == delete_id){
+                inputIds.splice(id_index, 1);
+                break;
+            }
+        }
+        $("#" + delete_id).remove(); // ** Deletes the row it's in
     });
 }
 /**
