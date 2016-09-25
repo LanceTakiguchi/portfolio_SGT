@@ -27,7 +27,7 @@ var ajax_data = null;
  * @type {null}
  */
 var ajax_sent = null;
-var old_ajax_sent = null;
+var ajax_delete = null;
 /**
  * addClicked - Event Handler when user clicks the add button
  */
@@ -40,6 +40,7 @@ function addClicked(){
             alert( 'Number too high.' );
             $("#studentGrade").val("");
         }else{
+            ajax_data == null;
             addStudent(); // ** Add student
             deleteClicked(); // ** Add delete functionality
         }
@@ -54,12 +55,6 @@ function cancelClicked(){
         $("#course").val("");
         $("#studentGrade").val("");
     });
-}
-/**
- * Grab server data on click
- */
-function serverClicked(){
-    $("#serverButton").click(obtainServerData);
 }
 /**
  * The functionality of the "Get Server Data" button. Waits for results from the AJAX call and then adds the students to the array and table
@@ -97,19 +92,33 @@ function obtainServerData(){
 function deleteClicked(){
     $(".student-list .btn.btn-danger:last").click(function(){ // ** If not last, it will give every existing delete button a new click handler.
         var delete_id = $(this).parent().parent()[0].id;
-        for (var student_index in student_array){
-            if (student_array[student_index].id == delete_id){
-                student_array.splice(student_index, 1);
-                break;
+        requestStudentDelete(delete_id);
+
+        function wait(){
+            if (ajax_delete == null){
+                setTimeout(wait, 10); // ** Note: I feel like a recursion genius XD
+            }else if(ajax_delete.success === true){
+                // ** The data was saved. Now use the data.
+                for (var student_index in student_array){
+                    if (student_array[student_index].id == delete_id){
+                        removeStudent(student_index);
+                        break;
+                    }
+                }
+                for (var id_index in inputIds){
+                    if (inputIds[id_index] == delete_id){
+                        inputIds.splice(id_index, 1);
+                        break;
+                    }
+                }
+                $("#" + delete_id).remove(); // ** Deletes the row it's in
+            }else{
+                console.log("We can't delete them!")
             }
         }
-        for (var id_index in inputIds){
-            if (inputIds[id_index] == delete_id){
-                inputIds.splice(id_index, 1);
-                break;
-            }
-        }
-        $("#" + delete_id).remove(); // ** Deletes the row it's in
+        wait(); // ** Recursive call to check again for the ajax data.
+        ajax_delete = null;
+
     });
 }
 /**
@@ -117,7 +126,7 @@ function deleteClicked(){
  * @param {number} index The index which holds the student whose existence is no longer tolerable.
  */
 function removeStudent(index){
-    student_array.slice(index, 1);;
+    student_array.slice(index, 1);
 }
 /**
  * addStudent - creates a student objects based on input fields in the form and adds the object to global student array
@@ -132,11 +141,10 @@ function addStudent(){
     sendStudentData(student); // ** Send to LearningFuze server
 
     function wait(){
-        if (ajax_sent == null || old_ajax_sent == ajax_sent.new_id){
+        if (ajax_sent == null){
             setTimeout(wait, 10); // ** Note: I feel like a recursion genius XD
         }else {
             // ** The data was saved. Now use the data.
-            old_ajax_sent = ajax_sent.new_id;
             student.id = ajax_sent.new_id;
             student_array.push(student);
             current_student_index++;
@@ -211,6 +219,7 @@ function reset(){
  */
 function Call_LearningFuze(){ 
     //console.log('Calling LearningFuze');
+    $("#student_loading").addClass("loader");
     var ajax_return = null; // Will hold the AJAX return
     $.ajax({
         url: 'http://s-apis.learningfuze.com/sgt/get',
@@ -221,14 +230,18 @@ function Call_LearningFuze(){
         success: function(response){
             // console.log('Data retrieval successfully');
             ajax_data = response;
+            $("#student_loading").removeClass("loader");
         },
         error: function(response){
             console.log('ajax error!')
+            $("#student_loading").removeClass("loader");
         }
     });  //end of the ajax call
+    //$("#student_input").removeClass(".loader");
 }
 function sendStudentData(student){
     console.log("Sending student data!");
+    $("#student_loading").addClass("loader");
     var ajax_return = null; // Will hold the AJAX return
     $.ajax({
         url: 'http://s-apis.learningfuze.com/sgt/create',
@@ -250,6 +263,30 @@ function sendStudentData(student){
             console.log(fail_report);
         }
     });  //end of the ajax call
+    $("#student_loading").removeClass("loader");
+}
+function requestStudentDelete(student_id){
+    console.log("Sending student data!");
+    $("#student_loading").addClass("loader");
+    var ajax_return = null; // Will hold the AJAX return
+    $.ajax({
+        url: 'http://s-apis.learningfuze.com/sgt/delete',
+        dataType: 'json',
+        method: 'POST',
+        data: {
+            api_key: "Yd2V1lB6e5",
+            student_id: student_id
+        },
+        success: function(result){
+            // console.log('requestionStudentData Sucessful!');
+            ajax_delete = result;
+        },
+        error: function(result){
+            console.log("requestStudentData AJAX error!");
+            console.log(result);
+        }
+    });  //end of the ajax call
+    $("#student_loading").removeClass("loader");
 }
 /**
  * OnlyNumberGrades - Limits the grade input to just numbers and action keys
@@ -282,7 +319,6 @@ function OnlyNumberGrades(){
 $(document).ready(function () {
     addClicked();
     cancelClicked();
-    serverClicked();
     obtainServerData();
     OnlyNumberGrades();
 });
