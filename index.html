@@ -4,72 +4,77 @@
     <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
     <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.8/angular.js"></script>
     <script src="script.js"></script>
     <link rel="stylesheet" href="style.css">
     <meta name="viewport" content="initial-scale=1, user-scalable=no">
 </head>
 <body>
-<div class="container">
-    <div class="row">
-        <!-- only show this element when the isnt on mobile -->
-        <h1 class="page-header col-md-12 visible-lg">Student Grade Table
-            <small class="col-md-3 pull-right">Grade Average : <span class="avgGrade label label-default"> 0 </span></small>
-        </h1>
-        <!-- only show this element when the user gets to a mobile version -->
-        <h3 class="page-header col-sm-12 hidden-lg">Student Grade Table
-            <small class="pull-gright col-sm-3">Grade Average : <span class="avgGrade label label-default"> 0 </span></small>
-        </h3>
-    </div>
-    <hr>
-    <div class="col-md-3 student-add-form pull-right">
-        <h4 class="input-group-header">Add Student</h4>
-        <div class="form-group">
-            <div class="input-group">
-            <span class="input-group-addon">
-                <span class="glyphicon glyphicon-user"></span>
-            </span>
-                <input type="text" class="form-control" name="studentName" id="studentName" placeholder="Student Name">
+    <div ng-app="sgt_app" class="container">
+        <div ng-controller="app_controller as ac" class="row">
+            <!-- only show this element when the isnt on mobile -->
+            <h1 class="page-header col-md-12 visible-lg">Student Grade Table
+                <small class="col-md-3 pull-right">Grade Average : <span ng-model="ac.grade_average" class="avgGrade label label-default"> {{ac.grade_average}} </span></small>
+            </h1>
+            <!-- only show this element when the user gets to a mobile version -->
+            <!-- TODO: Copy above Angular code to here -->
+            <h3 class="page-header col-sm-12 hidden-lg">Student Grade Table
+                <small class="pull-gright col-sm-3">Grade Average : <span ng-model="grade_average" class="avgGrade label label-default"> 0 </span></small>
+            </h3>
+        </div>
+        <hr>
+        <div class="col-md-3 student-add-form pull-right">
+            <h4 class="input-group-header">Add Student</h4>
+            <div class="form-group">
+                <div class="input-group">
+                    <span class="input-group-addon">
+                        <span class="glyphicon glyphicon-user"></span>
+                    </span>
+                    <input type="text" class="form-control" name="studentName" id="studentName" placeholder="Student Name">
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="input-group">
+                    <span class="input-group-addon">
+                        <span class="glyphicon glyphicon-list-alt"></span>
+                    </span>
+                    <input type="text" class="form-control" name="course" id="course"
+                    placeholder="Student Course">
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="input-group">
+                    <span class="input-group-addon">
+                        <span class="glyphicon glyphicon-education"></span>
+                    </span>
+                    <input type="text" class="form-control" name="studentGrade" id="studentGrade"
+                    placeholder="Student Grade">
+                </div>
+            </div>
+            <div class="control-group">
+                <button id="addButton" type="button" class="btn btn-success" onclick="">Add</button>
+                <button id="cancelButton" type="button" class="btn btn-default" onclick="">Cancel</button>
+            </div>
+            <div id="student_loading"></div>
+            <div id="ux_display">
+                <h3 id="ux_title">Welcome</h3>
             </div>
         </div>
-        <div class="form-group">
-            <div class="input-group">
-            <span class="input-group-addon">
-                <span class="glyphicon glyphicon-list-alt"></span>
-            </span>
-                <input type="text" class="form-control" name="course" id="course"
-                       placeholder="Student Course">
-            </div>
+        <div ng-controller="table_controller as tc" ng-init="tc.get_server_data()" class="student-list-container col-md-9">
+            <table class="student-list table">
+                <thead>
+                    <tr>
+                        <th>Student Name</th>
+                        <th>Student Course</th>
+                        <th>Student Grade</th>
+                        <th>Operations</th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
         </div>
-        <div class="form-group">
-            <div class="input-group">
-            <span class="input-group-addon">
-                <span class="glyphicon glyphicon-education"></span>
-            </span>
-                <input type="text" class="form-control" name="studentGrade" id="studentGrade"
-                       placeholder="Student Grade">
-            </div>
-        </div>
-        <div class="control-group">
-            <button id="addButton" type="button" class="btn btn-success" onclick="">Add</button>
-            <button id="cancelButton" type="button" class="btn btn-default" onclick="">Cancel</button>
-        </div>
-        <div id="student_loading"></div>
     </div>
-    <div class="student-list-container col-md-9">
-        <table class="student-list table">
-            <thead>
-            <tr>
-                <th>Student Name</th>
-                <th>Student Course</th>
-                <th>Student Grade</th>
-                <th>Operations</th>
-            </tr>
-            </thead>
-            <tbody>
-            </tbody>
-        </table>
-    </div>
-</div>
 </body>
 </html>
 

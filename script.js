@@ -6,32 +6,69 @@
  * Starts at negative 1 as when a student is added, it will always increment, putting the first student as index 0
  * @type {number}
  */
-var current_student_index = -1;
+ var current_student_index = -1;
 /**
  * student_array - global array to hold student objects
  * @type {Array}
  */
-var student_array = [];
+ var student_array = [];
 /**
  * inputIds - id's of the elements that are used to add students
  * @type {string[]}
  */
-var inputIds = [];
+ var inputIds = [];
 /**
  * ajax_data - Used to hold the results from the server call
  * @type {null} - Will be an object with and array with an object
  */
-var ajax_data = null;
+ var ajax_data = null;
 /**
  * ajax_sent - Used to hold the id returned from beaming up a student
  * @type {null}
  */
-var ajax_sent = null;
-var ajax_delete = null;
+ var ajax_sent = null;
+ var ajax_delete = null;
+/**
+ * [app description - AngularJS main app holding all controllers]
+ */
+ var app = angular.module("sgt_app", []);
+ app.controller("app_controller", function() {
+    self_app_controller = this;
+    this.calculate = function(){ //TODO: save student_array into the scope
+            var sum = 0; // ** Holds the total of all the grades added together
+            for(var index in student_array){
+                sum += Number(student_array[index].grade);
+            }
+            self_app_controller.grade_average = Math.round(sum / student_array.length);
+            console.info("grade average:" + this.self_app_controller.grade_average);
+        };
+    });
+ app.controller("table_controller", function($http, $log){
+            this.get_server_data = function(){
+                var self_server_data = this;
+                $http({
+                  url: "http://s-apis.learningfuze.com/sgt/get",
+                  headers: {"Content-Type": "application/x-www-form-urlencoded"},
+                  dataType: 'json',
+                  method: 'post',
+                  cache: false,
+                  data: $.param({api_key: "Yd2V1lB6e5"})
+              })
+                .then(
+                  function(success_response){
+                    self_server_data.data = success_response;
+                    $log.info("Server data retrieved: ", success_response);
+                }, 
+                function(fail_response){
+                    self_server_data.data = fail_response;
+                    $log.warn("table_controller this.get_server_data fail_reponse: ", fail_response);
+                });
+            };
+        });
 /**
  * addClicked - Event Handler when user clicks the add button
  */
-function addClicked(){
+ function addClicked(){
     $("#addButton").click(function(){
         if ( parseInt( $("#studentGrade").val() ) < 0 ) {
             alert( 'Number too low.' );
@@ -49,7 +86,7 @@ function addClicked(){
 /**
  * cancelClicked - Event Handler when user clicks the cancel button, should clear out student form
  */
-function cancelClicked(){
+ function cancelClicked(){
     $("#cancelButton").click(function(){
         $("#studentName").val("");
         $("#course").val("");
@@ -59,12 +96,12 @@ function cancelClicked(){
 /**
  * The functionality of the "Get Server Data" button. Waits for results from the AJAX call and then adds the students to the array and table
  */
-function obtainServerData(){
+ function obtainServerData(){
     Call_LearningFuze();
     /**
      * Used to wait for the ajax data to be saved in the global ajax_data
      */
-    function wait(){
+     function wait(){
         if (ajax_data == null){
             setTimeout(wait, 10); // ** Note: I feel like a recursion genius XD
         }else {
@@ -79,7 +116,7 @@ function obtainServerData(){
                 inputIds.push(id);
                 current_student_index++;
                 addStudentToDom(student);
-                displayAverage();
+                // displayAverage(); //TODO: Delete
                 deleteClicked();
             }
         }
@@ -89,7 +126,7 @@ function obtainServerData(){
 /**
  * deleteClicked - Event Handler when user clicks the cancel button, should remove from student array and delete the student's DOM row
  */
-function deleteClicked(){
+ function deleteClicked(){
     $(".student-list .btn.btn-danger:last").click(function(){ // ** If not last, it will give every existing delete button a new click handler.
         var delete_id = $(this).parent().parent()[0].id;
         requestStudentDelete(delete_id);
@@ -125,7 +162,7 @@ function deleteClicked(){
  * Removes the student object from student_array
  * @param {number} index The index which holds the student whose existence is no longer tolerable.
  */
-function removeStudent(index){
+ function removeStudent(index){
     student_array.slice(index, 1);
 }
 /**
@@ -133,7 +170,7 @@ function removeStudent(index){
  *
  * @return undefined
  */
-function addStudent(){
+ function addStudent(){
     var name = $("#studentName").val();
     var course = $("#course").val();
     var grade = $("#studentGrade").val();
@@ -158,10 +195,10 @@ function addStudent(){
 /**
  * Function to display the calculated average onto the DOM
  */
-function displayAverage(){
-    var average = calculateAverage(); // ** TODO: reallocate this action to another part of the code
-    $("div div small span").html(average);
-}
+// function displayAverage(){
+//     var average = calculateAverage(); // ** TODO: reallocate this action to another part of the code
+//     $("div div small span").html(average);
+// }
 /**
  * clearAddStudentForm - clears out the form values based on inputIds variable
  */
@@ -170,24 +207,24 @@ function displayAverage(){
  * calculateAverage - loop through the global student array and calculate average grade and return that value
  * @returns {number}
  */
-function calculateAverage(){
-    var sum = 0; // ** Holds the total of all the grades added together
-    for(var index in student_array){
-        sum += Number(student_array[index].grade);
-    }
-    return Math.round(sum / student_array.length);
-}
+// function calculateAverage(){
+//     var sum = 0; // ** Holds the total of all the grades added together
+//     for(var index in student_array){
+//         sum += Number(student_array[index].grade);
+//     }
+//     return Math.round(sum / student_array.length);
+// }
 /**
  * updateData - centralized function to update the average and call student list update
  */
-function updateData(){
+ function updateData(){
     calculateAverage();
     updateStudentList();
 }
 /**
  * updateStudentList - loops through global student array and appends each objects data into the student-list-container > list-body
  */
-function updateStudentList(){
+ function updateStudentList(){
     //**TODO updateStudentList
 }
 /**
@@ -195,7 +232,7 @@ function updateStudentList(){
  * into the .student_list tbody
  * @param studentObj
  */
-function addStudentToDom(studentObj){
+ function addStudentToDom(studentObj){
     var student_column = "<td>" + studentObj.name + "</td>";
     var course_column = "<td>" + studentObj.course + "</td>";
     var grade_column = "<td>" + studentObj.grade + "</td>";
@@ -207,7 +244,7 @@ function addStudentToDom(studentObj){
 /**
  * reset - resets the application to initial state. Global variables reset, DOM get reset to initial load state
  */
-function reset(){
+ function reset(){
     student_array = [];
     inputIds = [];
     //TODO: reset inputs
@@ -217,7 +254,7 @@ function reset(){
  * Call_LearningFuze - Calls the LearningFuze server to get online table
  * @constructor
  */
-function Call_LearningFuze(){ 
+ function Call_LearningFuze(){ 
     //console.log('Calling LearningFuze');
     $("#student_loading").addClass("loader");
     var ajax_return = null; // Will hold the AJAX return
@@ -292,7 +329,7 @@ function requestStudentDelete(student_id){
  * OnlyNumberGrades - Limits the grade input to just numbers and action keys
  * @constructor
  */
-function OnlyNumberGrades(){
+ function OnlyNumberGrades(){
     $("#studentGrade").keydown(function (e) {
         // Allow: backspace, delete, tab, escape, and enter
         if ($.inArray(e.keyCode, [46, 8, 9, 27, 13, 110]) !== -1 ||
@@ -305,8 +342,8 @@ function OnlyNumberGrades(){
             // Allow: home, end, left, right
             (e.keyCode >= 35 && e.keyCode <= 39)) {
             // let it happen, don't do anything
-            return;
-        }
+        return;
+    }
         // Ensure that it is a number and stop the keypress
         if ((e.shiftKey || (e.keyCode < 48 || e.keyCode > 57)) && (e.keyCode < 96 || e.keyCode > 105)) {
             e.preventDefault();
@@ -316,7 +353,7 @@ function OnlyNumberGrades(){
 /**
  * Listen for the document to load and reset the data to the initial state
  */
-$(document).ready(function () {
+ $(document).ready(function () {
     addClicked();
     cancelClicked();
     obtainServerData();
