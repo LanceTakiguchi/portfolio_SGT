@@ -23,7 +23,7 @@
             </h3>
         </div>
         <hr>
-        <div ng-controller="form_controller as fc" class="col-md-3 student-add-form pull-right">-->
+        <div ng-controller="form_controller as fc" class="col-md-3 student-add-form pull-right">
             <h4 class="input-group-header">Add Student</h4>
             <div class="form-group">
                 <div class="input-group">
@@ -71,7 +71,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr ng-init="tc.get_students()" ng-repeat="student in tc.students">
+                    <tr ng-repeat="student in tc.students">
                         <td>{{student.name}}</td>
                         <td>{{student.course}}</td>
                         <td>{{student.grade}}</td>

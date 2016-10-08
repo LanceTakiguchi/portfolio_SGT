@@ -44,6 +44,7 @@
    
     });
  app.controller("table_controller", function($http, $log, shared_data){
+    var self_table_controller = this;
     this.get_server_data = function(){
         $log.log("Running get_server_data")
         var self_server_data = this;
@@ -59,15 +60,13 @@
           function(success_response){
             shared_data.update_students(success_response.data.data); //** This is just the student array
             $log.info("Server data retrieved: ", shared_data.return_students());
+            self_table_controller.students =  shared_data.return_students()
         }, 
         function(fail_response){
             self_server_data.data = fail_response;
             $log.warn("table_controller this.get_server_data fail_reponse: ", fail_response);
         });
     };
-    this.get_students = function(){
-        this.students =  shared_data.get_students();
-    }
 });
  app.controller("form_controller", function($http, $log, shared_data) {
     //form_controller
@@ -91,8 +90,14 @@
       })
         .then(
           function(success_response){
-            self_send_server.data = success_response; //** This is just the student array
-            $log.info("Server data sent: ", self_send_server.data);
+            self_send_server.id = success_response.data.new_id; //** This is just the student array
+            $log.info("Server data sent: ", self_send_server.id);
+            shared_data.add_student({
+              name: self_send_server.input_name,
+              course: self_send_server.input_course,
+              grade: self_send_server.input_grade,
+              id: self_send_server.id
+            })
         }, 
         function(fail_response){
             self_send_server.data = fail_response;
