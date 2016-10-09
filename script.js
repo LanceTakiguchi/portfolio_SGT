@@ -3,93 +3,103 @@
  */
  var app = angular.module("sgt_app", []);
  app.service("shared_data", function(){
-    this.all_students = [];
-    this.grade_average = 0;
-    this.calculate_grade_average = function(){
+  this.all_students = [];
+  this.grade_average = 0;
+  this.calculate_grade_average = function(){
             var sum = 0; // ** Holds the total of all the grades added together
             for(var index in this.all_students){
-                sum += Number(this.all_students[index].grade);
+              sum += Number(this.all_students[index].grade);
             }
             this.grade_average = Math.round(sum / this.all_students.length);
-        };
+            return this.grade_average;
+          };
     /**
      * Adds student into the all_student's arry
      * @param Object student An Object with the student's name, course, grade, and id
      */
-    this.add_student = function(student){
-        this.all_students.push(student);
+     this.add_student = function(student){
+      this.all_students.push(student);
     };
     this.update_students = function(roster){
-        this.all_students = roster;
+      this.all_students = roster;
     };
     this.return_students = function(){
-        return this.all_students;
+      return this.all_students;
     }
     /**
      * Given an id, removes the student from the array
      * @param  Number student_id A id of who to remove
      * @return bool            returns if the student was removed or not
      */
-    this.remove_student = function(student_id){
-        for(student_index in this.all_students){
-            if(this.all_students[student_index].id == student_id){
-                this.all_students.splice(student_index, 1);
-                return true;
-            }
+     this.remove_student = function(student_id){
+      for(student_index in this.all_students){
+        if(this.all_students[student_index].id == student_id){
+          this.all_students.splice(student_index, 1);
+          return true;
         }
-        return false;
+      }
+      return false;
     }
- })
- app.controller("app_controller", function($log, $http, shared_data) {
-   
-    });
- app.controller("table_controller", function($http, $log, shared_data){
-    var self_table_controller = this;
-    this.get_server_data = function(){
-        $log.log("Running get_server_data")
-        var self_server_data = this;
-        $http({
-          url: "http://s-apis.learningfuze.com/sgt/get",
-          headers: {"Content-Type": "application/x-www-form-urlencoded"},
-          dataType: 'json',
-          method: 'post',
-          cache: false,
-          data: $.param({api_key: "Yd2V1lB6e5"})
-      })
-        .then(
-          function(success_response){
+  })
+app.controller("app_controller", function($log, $http, shared_data) {
+  this.grade_average = shared_data.grade_average;
+  this.get_grade_average = function(){
+    this.grade_average = shared_data.calculate_grade_average();
+  }
+});
+app.controller("table_controller", function($http, $log, shared_data){
+  var self_table_controller = this;
+  this.get_server_data = function(){
+    $log.log("Running get_server_data")
+    var self_server_data = this;
+    $http({
+      url: "http://s-apis.learningfuze.com/sgt/get",
+      headers: {"Content-Type": "application/x-www-form-urlencoded"},
+      dataType: 'json',
+      method: 'post',
+      cache: false,
+      data: $.param({api_key: "Yd2V1lB6e5"})
+    })
+    .then(
+      function(success_response){
             shared_data.update_students(success_response.data.data); //** This is just the student array
             $log.info("Server data retrieved: ", shared_data.return_students());
-            self_table_controller.students =  shared_data.return_students()
-        }, 
-        function(fail_response){
+            self_table_controller.students =  shared_data.return_students();
+            shared_data.calculate_grade_average(); //** Start calculating grade average
+          }, 
+          function(fail_response){
             self_server_data.data = fail_response;
             $log.warn("table_controller this.get_server_data fail_reponse: ", fail_response);
-        });
-    };
+          });
+  };
 });
- app.controller("form_controller", function($http, $log, shared_data) {
+app.controller("form_controller", function($http, $log, shared_data) {
     //form_controller
     this.input_name = "";
     this.input_course = "";
     this.input_grade = "";
     this.all_students = [];
+    this.clear_inputs = function(){
+      this.input_name = "";
+      this.input_course = "";
+      this.input_grade = "";
+    }
     this.send_server = function(){
-        $log.log("Running send_server")
-        var self_send_server = this;
-        $http({
-          url: "http://s-apis.learningfuze.com/sgt/create",
-          headers: {"Content-Type": "application/x-www-form-urlencoded"},
-          dataType: 'json',
-          method: 'post',
-          cache: false,
-          data: $.param({api_key: "Yd2V1lB6e5",
-              name: self_send_server.input_name,
-              course: self_send_server.input_course,
-              grade: self_send_server.input_grade})
+      $log.log("Running send_server")
+      var self_send_server = this;
+      $http({
+        url: "http://s-apis.learningfuze.com/sgt/create",
+        headers: {"Content-Type": "application/x-www-form-urlencoded"},
+        dataType: 'json',
+        method: 'post',
+        cache: false,
+        data: $.param({api_key: "Yd2V1lB6e5",
+          name: self_send_server.input_name,
+          course: self_send_server.input_course,
+          grade: self_send_server.input_grade})
       })
-        .then(
-          function(success_response){
+      .then(
+        function(success_response){
             self_send_server.id = success_response.data.new_id; //** This is just the student array
             $log.info("Server data sent: ", self_send_server.id);
             shared_data.add_student({
@@ -98,13 +108,13 @@
               grade: self_send_server.input_grade,
               id: self_send_server.id
             })
-        }, 
-        function(fail_response){
+          }, 
+          function(fail_response){
             self_send_server.data = fail_response;
             $log.warn("table_controller this.send_server fail_reponse: ", fail_response);
-        });
+          });
     };
-});
+  });
 
 /****************** Non-Angular Below **********************/
 
