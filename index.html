@@ -14,12 +14,12 @@
         <div class="row">
             <!-- only show this element when the isnt on mobile -->
             <h1 class="page-header col-md-12 visible-lg">Student Grade Table
-                <small class="col-md-3 pull-right">Grade Average : <span class="avgGrade label label-default"> {{ac.grade_average}} </span></small>
+                <small class="col-md-3 pull-right">Grade Average : <span class="avgGrade label label-default"> {{ac.get_grade_average()}} </span></small>
             </h1>
             <!-- only show this element when the user gets to a mobile version -->
             <!-- TODO: Copy above Angular code to here -->
             <h3 class="page-header col-sm-12 hidden-lg">Student Grade Table
-                <small class="pull-gright col-sm-3">Grade Average : <span ng-model="grade_average" class="avgGrade label label-default"> {{ac.input_student}} </span></small>
+                <small class="pull-gright col-sm-3">Grade Average : <span ng-model="grade_average" class="avgGrade label label-default"> {{ac.get_grade_average()}} </span></small>
             </h3>
         </div>
         <hr>
@@ -53,7 +53,7 @@
             </div>
             <div class="control-group">
                 <button ng-click="fc.send_server()" id="addButton" type="button" class="btn btn-success" onclick="">Add Student</button>
-                <button ng-click="fc.clear_inputs()" id="cancelButton" type="button" class="btn btn-default" onclick="">Cancel</button>
+                <button ng-click="fc.clear_inputs(); ac.get_grade_average()" id="cancelButton" type="button" class="btn btn-default" onclick="">Cancel</button>
             </div>
             <div id="student_loading"></div>
             <div id="ux_display">

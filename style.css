@@ -12,3 +12,13 @@
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
 }
+
+#addButton{
+	position: relative; /*So that z-index applies*/
+	z-index: 2;
+}
+
+#cancelButton{
+	position: relative; /*So that z-index applies*/
+	z-index: 2;
+}

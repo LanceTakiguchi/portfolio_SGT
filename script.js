@@ -6,6 +6,9 @@
   this.all_students = [];
   this.grade_average = 0;
   this.calculate_grade_average = function(){
+            if(this.all_students.length === 0){
+              return "";
+            }
             var sum = 0; // ** Holds the total of all the grades added together
             for(var index in this.all_students){
               sum += Number(this.all_students[index].grade);
@@ -42,9 +45,9 @@
     }
   })
 app.controller("app_controller", function($log, $http, shared_data) {
-  this.grade_average = shared_data.grade_average;
+  this.grade_average = shared_data.calculate_grade_average();
   this.get_grade_average = function(){
-    this.grade_average = shared_data.calculate_grade_average();
+    return shared_data.calculate_grade_average();
   }
 });
 app.controller("table_controller", function($http, $log, shared_data){
