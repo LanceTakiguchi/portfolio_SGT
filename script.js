@@ -6,9 +6,9 @@
   this.all_students = [];
   this.grade_average = 0;
   this.calculate_grade_average = function(){
-            if(this.all_students.length === 0){
-              return "";
-            }
+    if(this.all_students.length === 0){
+      return "";
+    }
             var sum = 0; // ** Holds the total of all the grades added together
             for(var index in this.all_students){
               sum += Number(this.all_students[index].grade);
@@ -28,6 +28,20 @@
     };
     this.return_students = function(){
       return this.all_students;
+    };
+    /**
+     * Delete's student from array based on a param id
+     * @param  Number id The id of the student to be deleted from this.all_students
+     * @return bool    Bool to tell if the operation successfully deleted the student or not
+     */
+     this.delete_student = function(id){
+      for(student_index in this.all_students){
+        if(this.all_students[student_index].id === id){
+          this.all_students.splice(student_index, 0);
+          return true;
+        }
+      }
+      return false; //Student at id was not found
     }
     /**
      * Given an id, removes the student from the array
@@ -44,7 +58,7 @@
       return false;
     }
   })
-app.controller("app_controller", function($log, $http, shared_data) {
+app.controller("app_controller", function($log, shared_data) {
   this.grade_average = shared_data.calculate_grade_average();
   this.get_grade_average = function(){
     return shared_data.calculate_grade_average();
@@ -52,6 +66,11 @@ app.controller("app_controller", function($log, $http, shared_data) {
 });
 app.controller("table_controller", function($http, $log, shared_data){
   var self_table_controller = this;
+  this.delete_handler = function(student){
+    $log.log("table_controller delete_handler init");
+    this.request_server_delete(student.id);
+    shared_data.remove_student(student.id); //TODO: handle the bool return
+  };
   this.get_server_data = function(){
     $log.log("Running get_server_data")
     var self_server_data = this;
@@ -75,6 +94,26 @@ app.controller("table_controller", function($http, $log, shared_data){
             $log.warn("table_controller this.get_server_data fail_reponse: ", fail_response);
           });
   };
+  this.request_server_delete = function(delete_id){
+    $log.log("Running request_server_delete");
+    $http({
+      url: 'http://s-apis.learningfuze.com/sgt/delete',
+      headers: {"Content-Type": "application/x-www-form-urlencoded"},
+      dataType: 'json',
+      method: 'POST',
+      data: $.param({
+        api_key: "Yd2V1lB6e5",
+        student_id: delete_id
+      }),
+    })
+    .then(
+      function(success_delete){
+        $log.info("request_server_delete sucessful!", success_delete);
+      },
+      function(fail_delete){
+        $log.warn("request_server_delete failed! ", fail_delete);
+      })
+  }
 });
 app.controller("form_controller", function($http, $log, shared_data) {
     //form_controller
@@ -111,6 +150,7 @@ app.controller("form_controller", function($http, $log, shared_data) {
               grade: self_send_server.input_grade,
               id: self_send_server.id
             })
+            self_send_server.clear_inputs();
           }, 
           function(fail_response){
             self_send_server.data = fail_response;

@@ -53,7 +53,7 @@
             </div>
             <div class="control-group">
                 <button ng-click="fc.send_server()" id="addButton" type="button" class="btn btn-success" onclick="">Add Student</button>
-                <button ng-click="fc.clear_inputs(); ac.get_grade_average()" id="cancelButton" type="button" class="btn btn-default" onclick="">Cancel</button>
+                <button ng-click="fc.clear_inputs()" id="cancelButton" type="button" class="btn btn-default" onclick="">Cancel</button>
             </div>
             <div id="student_loading"></div>
             <div id="ux_display">
@@ -75,7 +75,7 @@
                         <td>{{student.name}}</td>
                         <td>{{student.course}}</td>
                         <td>{{student.grade}}</td>
-                        <td><button type='button' class='btn btn-danger' onclick=''>Delete</button></td>
+                        <td><button ng-click="tc.delete_handler(student)" type='button' class='btn btn-danger' onclick=''>Delete</button></td>
                     </tr>
                 </tbody>
             </table>
