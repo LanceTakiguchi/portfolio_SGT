@@ -38,30 +38,37 @@ Prompt:
         case "server data retrieved":
         this.display = "Welcome";
         this.display_details = "Student Grade Table";
+        this.blue();
         break;
         case "server data retrieve fail":
         this.display = "Table Load Error";
         this.display_details = "Could not retrieve server student data. Sorry for the inconvience.";
+        this.red();
         break;
         case "delete sucessful":
         this.display = "Student " + this.return_student(id) + " deleted.";
         this.display_details = "";
+        this.green();
         break;
         case "delete failed":
         this.display = "Error: Student " + this.return_student(id) + " could not be deleted."
         this.display_details = "Cannot delete a student inputted by another account."
+        this.red();
         break;
         case "delete server fail":
         this.display = "Error: Student " + this.return_student(id) + " could not be deleted."
         this.display_details = "Server error."
+        this.red();
         break;
         case "add sucessful":
         this.display = "Student " + this.return_student(id) + " added";
         this.display_details = "";
+        this.green();
         break;
         case "add failed":
         this.display = "Error: Student " + this.return_student(id) + " could not be added.";
         this.display_details = "Server error.";
+        this.red();
         breal;
       }
     }
@@ -71,6 +78,18 @@ Prompt:
       var display = this.display;
       var display_details = this.display_details;
       return {display, display_details};
+    }
+    this.green = function(){
+      $("#ux_display").removeClass();
+      $("#ux_display").addClass("alert alert-success");
+    }
+    this.blue = function(){
+      $("#ux_display").removeClass();
+      $("#ux_display").addClass("alert alert-info");
+    }
+    this.red = function(){
+      $("#ux_display").removeClass();
+      $("#ux_display").addClass("alert alert-danger");
     }
   /**
    * Holds the local array of all students
