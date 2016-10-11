@@ -40,42 +40,50 @@ Prompt:
         this.display = "Welcome";
         this.display_details = "Student Grade Table";
         break;
+        
         case "server data retrieve fail":
         this.red();
         this.display = "Table Load Error";
         this.display_details = "Could not retrieve server student data. Sorry for the inconvience.";
         break;
+        
         case "delete sucessful":
         this.green();
         this.display = "Student " + this.return_student(id) + " deleted.";
         this.display_details = "";
         break;
+        
         case "delete failed":
         this.red();
         this.display = "Error: Student " + this.return_student(id) + " could not be deleted."
         this.display_details = "Cannot delete a student inputted by another account."
         break;
+        
         case "delete server fail":
         this.red();
         this.display = "Error: Student " + this.return_student(id) + " could not be deleted."
         this.display_details = "Server error."
         break;
+        
         case "add sucessful":
         this.green();
         this.display = "Student " + this.return_student(id) + " added";
         this.display_details = "";
         break;
+        
         case "add failed":
         this.red();
         this.display = "Error: Student " + this.return_student(id) + " could not be added.";
         this.display_details = "Server error.";
         break;
+        
         case "clear":
         this.green();
         this.display = "Student Entry Cleared";
         this.display_details = "";
         break;
-        case "invalid length":
+        
+        case "invalid exist":
         this.red();
         this.display = "Input Error";
         this.display_details = "";
@@ -91,6 +99,24 @@ Prompt:
           }
         }
         this.display_details += " inputs are required."
+        break;
+
+        case "invalid long":
+        this.red();
+        this.display = "Input Error";
+        this.display_details = "";
+        if(details.length === 1){
+          this.display_details = details[0] + " have a 25 character limit.";
+          break;
+        }
+        for(var index in details){
+          if(index === details.length - 1){
+            this.display_details += details[index];
+          }else{
+            this.display_details += details[index] + ", ";
+          }
+        }
+        this.display_details += " has a 25 character limit."
         break;
       }
     }
@@ -331,14 +357,21 @@ app.controller("app_controller", function($log, shared_data) {
     this.input_course = "";
     this.input_grade = "";
     this.all_students = [];
-    this.clear_inputs = function(){
+    this.clear_inputs = function(message){
       this.input_name = "";
       this.input_course = "";
       this.input_grade = "";
-      shared_data.message("clear");
-      shared_data.remove_red();
+      if(message){
+        shared_data.message("clear");
+        shared_data.remove_red();
+      }
     }
-    this.input_validation = function(){
+    this.run_all_validations = function(){
+      if(this.run_length_validation() && this.run_exist_validation()){
+        this.send_server();
+      }
+    }
+    this.run_exist_validation = function(){
       shared_data.remove_red();
       var valid_name = this.exist_validation("Name", this.input_name);
       var valid_course = this.exist_validation("Course", this.input_course);
@@ -346,14 +379,34 @@ app.controller("app_controller", function($log, shared_data) {
       var valid_list = [valid_name, valid_course, valid_grade];
       var invalid_reason = [];
       if(valid_name.valid && valid_course.valid && valid_grade.valid){
-        this.send_server();
+        return true;
       }else{
         for(var index in valid_list){
           if(!valid_list[index].valid){
             invalid_reason.push(valid_list[index].input);
           }
         }
-        shared_data.message("invalid length", -1, invalid_reason);
+        shared_data.message("invalid exist", -1, invalid_reason);
+        return false;
+      }
+    };
+    this.run_length_validation = function(){
+      shared_data.remove_red();
+      var valid_name = this.length_validation("Name", this.input_name);
+      var valid_course = this.length_validation("Course", this.input_course);
+      var valid_grade = this.length_validation("Grade", this.input_grade);
+      var valid_list = [valid_name, valid_course, valid_grade];
+      var invalid_reason = [];
+      if(valid_name.valid && valid_course.valid && valid_grade.valid){
+        return true;
+      }else{
+        for(var index in valid_list){
+          if(!valid_list[index].valid){
+            invalid_reason.push(valid_list[index].input);
+          }
+        }
+        shared_data.message("invalid long", -1, invalid_reason);
+        return false;
       }
     };
     this.exist_validation = function(input_type, value){
@@ -399,7 +452,7 @@ app.controller("app_controller", function($log, shared_data) {
               grade: self_send_server.input_grade,
               id: self_send_server.id
             })
-            self_send_server.clear_inputs(); //** UX Choice: Clear the inputs if student is added
+            self_send_server.clear_inputs(false); //** UX Choice: Clear the inputs if student is added
             shared_data.message("add sucessful", self_send_server.id);
           }, 
           function(fail_response){
