@@ -10,6 +10,25 @@ Prompt:
  * AngularJS main app holding all controllers
  */
  var app = angular.module("sgt_app", []);
+ // loading for each http request
+ app.config(function ($httpProvider) {
+  $httpProvider.interceptors.push(function ($rootScope, $q) {
+    return {
+      request: function (config) {
+        config.timeout = 3000;
+        return config;
+      },
+      responseError: function (rejection) {
+        switch (rejection.status){
+          case 408 :
+          console.log('connection timed out');
+          break;
+        }
+        return $q.reject(rejection);
+      }
+    }
+  })
+})
  /**
   * Service that holds all shared data between Angular controllers
   */
@@ -22,7 +41,7 @@ Prompt:
         break;
         case "server data retrieve fail":
         this.display = "Table Load Error";
-        this.display_details = "Could not retrieve server student data. Sorry for the inconvience";
+        this.display_details = "Could not retrieve server student data. Sorry for the inconvience.";
         break;
         case "delete sucessful":
         this.display = "Student " + this.return_student(id) + " deleted.";
@@ -30,7 +49,7 @@ Prompt:
         break;
         case "delete failed":
         this.display = "Error: Student " + this.return_student(id) + " could not be deleted."
-        this.display_details = "Cannot delete a student user did not add."
+        this.display_details = "Cannot delete a student inputted by another account."
         break;
         case "delete server fail":
         this.display = "Error: Student " + this.return_student(id) + " could not be deleted."
