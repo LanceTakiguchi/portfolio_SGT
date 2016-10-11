@@ -64,7 +64,8 @@ Prompt:
             </div>
             <div id="student_loading"></div>
             <div id="ux_display">
-                <h3 id="ux_title">{{fc.display()}}</h3>
+                <h4 id="ux_title">{{fc.display("title")}}</h4>
+                <p id="ux_details">{{fc.display("details")}}</p>
             </div>
         </div>
         <div  ng-controller="table_controller as tc" ng-init="tc.get_server_data()" class="student-list-container col-md-9">

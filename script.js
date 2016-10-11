@@ -16,14 +16,34 @@ Prompt:
   app.service("shared_data", function(){
     this.message = function(message, id){
       switch(message){
+        case "server data retrieved":
+        this.display = "Welcome";
+        this.display_details = "Student Grade Table";
+        break;
+        case "server data retrieve fail":
+        this.display = "Table Load Error";
+        this.display_details = "Could not retrieve server student data. Sorry for the inconvience";
+        break;
         case "delete sucessful":
         this.display = "Student " + this.return_student(id) + " deleted.";
         this.display_details = "";
         break;
         case "delete failed":
-        this.display = "Student " + this.return_student(id) + " could not be deleted."
+        this.display = "Error: Student " + this.return_student(id) + " could not be deleted."
         this.display_details = "Cannot delete a student user did not add."
         break;
+        case "delete server fail":
+        this.display = "Error: Student " + this.return_student(id) + " could not be deleted."
+        this.display_details = "Server error."
+        break;
+        case "add sucessful":
+        this.display = "Student " + this.return_student(id) + " added";
+        this.display_details = "";
+        break;
+        case "add failed":
+        this.display = "Error: Student " + this.return_student(id) + " could not be added.";
+        this.display_details = "Server error.";
+        breal;
       }
     }
     this.display = "Welcome";
@@ -145,14 +165,19 @@ app.controller("app_controller", function($log, shared_data) {
     //$log.log(this.request_server_delete(student.id));
     this.request_server_delete(student.id);
   };
-  this.handle_server_delete_response = function(response, delete_id){
+  this.handle_server_delete_response = function(status, response, delete_id){
     //$log.log(response.data.success);
-    if(response.data.success){
-      shared_data.message("delete sucessful", delete_id);
-      shared_data.remove_student(delete_id);
+    if(status){
+      if(response.data.success){
+        shared_data.message("delete sucessful", delete_id);
+        shared_data.remove_student(delete_id);
+      }else{
+        shared_data.message("delete failed", delete_id);
+      }  
     }else{
-      shared_data.message("delete failed", delete_id);
+      shared_data.message("delete server fail", delete_id);
     }
+    
   };
   /**
    * Grabs all the students on the server for inital page load
@@ -174,9 +199,11 @@ app.controller("app_controller", function($log, shared_data) {
             //$log.info("Server data retrieved: ", shared_data.return_students());
             self_table_controller.students =  shared_data.return_students();
             shared_data.calculate_grade_average(); //** Start calculating grade average
+            shared_data.message("server data retrieved", 1);
           }, 
           function(fail_response){
             self_server_data.data = fail_response;
+            shared_data.message("server data retrieve fail", 0);
             //$log.warn("table_controller this.get_server_data fail_reponse: ", fail_response);
           });
  };
@@ -198,11 +225,11 @@ app.controller("app_controller", function($log, shared_data) {
     })
     .then(
       function(success_delete){
-        self_table_controller.handle_server_delete_response(success_delete, delete_id);
+        self_table_controller.handle_server_delete_response(true, success_delete, delete_id);
         //$log.info("request_server_delete sucessful!", success_delete);
       },
       function(fail_delete){
-        shared_data.delete_result = fail_delete;
+        self_table_controller.handle_server_delete_response(false, fail_delete, delete_id);
         //$log.warn("request_server_delete failed! ", fail_delete);
       })
   }
@@ -212,8 +239,11 @@ app.controller("app_controller", function($log, shared_data) {
  */
  app.controller("form_controller", function($http, $log, shared_data) {
     //form_controller
-    this.display = function(){
-      return shared_data.current_display().display;
+    this.display = function(type){
+      if(type === "title"){
+        return shared_data.current_display().display;  
+      }
+      return shared_data.current_display().display_details
     }
     this.input_name = "";
     this.input_course = "";
@@ -252,9 +282,11 @@ app.controller("app_controller", function($log, shared_data) {
               id: self_send_server.id
             })
             self_send_server.clear_inputs(); //** UX Choice: Clear the inputs if student is added
+            shared_data.message("add sucessful", self_send_server.id);
           }, 
           function(fail_response){
             self_send_server.data = fail_response;
+            shared_data.message("add failed", self_send_server.id);
             //$log.warn("table_controller this.send_server fail_reponse: ", fail_response);
           });
     };
