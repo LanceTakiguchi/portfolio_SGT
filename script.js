@@ -33,7 +33,7 @@ Prompt:
   * Service that holds all shared data between Angular controllers
   */
   app.service("shared_data", function(){
-    this.message = function(message, id){
+    this.message = function(message, id, details){
       switch(message){
         case "server data retrieved":
         this.blue();
@@ -75,14 +75,22 @@ Prompt:
         this.display = "Student Entry Cleared";
         this.display_details = "";
         break;
-        case "Course is too long":
-        case "Name is too long":
-        case "Grade input is required":
-        case "Course input is required":
-        case "Name input is required":
+        case "invalid length":
         this.red();
         this.display = "Input Error";
-        this.display_details = message + ".";
+        this.display_details = "";
+        if(details.length === 1){
+          this.display_details = details[0] + " input is required.";
+          break;
+        }
+        for(var index in details){
+          if(index === details.length - 1){
+            this.display_details += details[index];
+          }else{
+            this.display_details += details[index] + ", ";
+          }
+        }
+        this.display_details += " inputs are required."
         break;
       }
     }
@@ -328,26 +336,42 @@ app.controller("app_controller", function($log, shared_data) {
       this.input_course = "";
       this.input_grade = "";
       shared_data.message("clear");
+      shared_data.remove_red();
     }
     this.input_validation = function(){
-      var valid = this.length_validation("Name", this.input_name) && this.length_validation("Course", this.input_course) && this.length_validation("Grade", this.input_grade);
-      if(valid){
-        shared_data.remove_red();
+      shared_data.remove_red();
+      var valid_name = this.exist_validation("Name", this.input_name);
+      var valid_course = this.exist_validation("Course", this.input_course);
+      var valid_grade = this.exist_validation("Grade", this.input_grade);
+      var valid_list = [valid_name, valid_course, valid_grade];
+      var invalid_reason = [];
+      if(valid_name.valid && valid_course.valid && valid_grade.valid){
         this.send_server();
+      }else{
+        for(var index in valid_list){
+          if(!valid_list[index].valid){
+            invalid_reason.push(valid_list[index].input);
+          }
+        }
+        shared_data.message("invalid length", -1, invalid_reason);
       }
     };
-    this.length_validation = function(input_type, value){
+    this.exist_validation = function(input_type, value){
+      if(value.length <= 0){
+        //shared_data.message(input_type + " input is required");
+        shared_data.red_input(input_type);
+        return {valid: false, reason: "short", input: input_type};
+      }
+      return {valid: true, reason: "", input: input_type};
+    };
+    this.length_validation = function(input_type, value){ //TODO: Use!
       if(value.length > 25){
-        shared_data.message(input_type + " is too long");
+        //shared_data.message(input_type + " is too long");
         shared_data.red_input(input_type);
-        return false;
-      }else if(value.length <= 0){
-        shared_data.message(input_type + " input is required");
-        shared_data.red_input(input_type);
-        return false;
+        return {valid: false, reason: "long", input: input_type};
       }
-      return true;
-    };
+      return {valid: true, reason: "", input: input_type};
+    }
     this.send_server = function(){
       //$log.log("Running send_server")
       var self_send_server = this;
