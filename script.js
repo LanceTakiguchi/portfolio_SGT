@@ -36,40 +36,54 @@ Prompt:
     this.message = function(message, id){
       switch(message){
         case "server data retrieved":
+        this.blue();
         this.display = "Welcome";
         this.display_details = "Student Grade Table";
-        this.blue();
         break;
         case "server data retrieve fail":
+        this.red();
         this.display = "Table Load Error";
         this.display_details = "Could not retrieve server student data. Sorry for the inconvience.";
-        this.red();
         break;
         case "delete sucessful":
+        this.green();
         this.display = "Student " + this.return_student(id) + " deleted.";
         this.display_details = "";
-        this.green();
         break;
         case "delete failed":
+        this.red();
         this.display = "Error: Student " + this.return_student(id) + " could not be deleted."
         this.display_details = "Cannot delete a student inputted by another account."
-        this.red();
         break;
         case "delete server fail":
+        this.red();
         this.display = "Error: Student " + this.return_student(id) + " could not be deleted."
         this.display_details = "Server error."
-        this.red();
         break;
         case "add sucessful":
+        this.green();
         this.display = "Student " + this.return_student(id) + " added";
         this.display_details = "";
-        this.green();
         break;
         case "add failed":
+        this.red();
         this.display = "Error: Student " + this.return_student(id) + " could not be added.";
         this.display_details = "Server error.";
+        break;
+        case "clear":
+        this.green();
+        this.display = "Student Entry Cleared";
+        this.display_details = "";
+        break
+        case "Course is too long":
+        case "Name is too long":
+        case "Grade input is needed":
+        case "Course input is needed":
+        case "Name input is needed":
         this.red();
-        breal;
+        this.display = "Input Error";
+        this.display_details = message + ".";
+        break;
       }
     }
     this.display = "Welcome";
@@ -90,6 +104,10 @@ Prompt:
     this.red = function(){
       $("#ux_display").removeClass();
       $("#ux_display").addClass("alert alert-danger");
+    }
+    this.yellow = function(){
+      $("#ux_display").removeClass();
+      $("#ux_display").addClass("alert alert-warning");
     }
   /**
    * Holds the local array of all students
@@ -291,7 +309,24 @@ app.controller("app_controller", function($log, shared_data) {
       this.input_name = "";
       this.input_course = "";
       this.input_grade = "";
+      shared_data.message("clear");
     }
+    this.input_validation = function(){
+      var valid = this.length_validation("Name", this.input_name) && this.length_validation("Course", this.input_course) && this.length_validation("Grade", this.input_grade);
+      if(valid){
+        this.send_server();
+      }
+    };
+    this.length_validation = function(input_type, value){
+      if(value.length > 25){
+        shared_data.message(input_type + " is too long");
+        return false;
+      }else if(value.length <= 0){
+        shared_data.message(input_type + " input is needed");
+        return false;
+      }
+      return true;
+    };
     this.send_server = function(){
       //$log.log("Running send_server")
       var self_send_server = this;
