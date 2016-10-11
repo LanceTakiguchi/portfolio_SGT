@@ -74,12 +74,12 @@ Prompt:
         this.green();
         this.display = "Student Entry Cleared";
         this.display_details = "";
-        break
+        break;
         case "Course is too long":
         case "Name is too long":
-        case "Grade input is needed":
-        case "Course input is needed":
-        case "Name input is needed":
+        case "Grade input is required":
+        case "Course input is required":
+        case "Name input is required":
         this.red();
         this.display = "Input Error";
         this.display_details = message + ".";
@@ -108,6 +108,24 @@ Prompt:
     this.yellow = function(){
       $("#ux_display").removeClass();
       $("#ux_display").addClass("alert alert-warning");
+    }
+    this.red_input = function(type){
+      switch(type){
+        case "Name":
+        $("#studentName").addClass("has-error");
+        break;
+        case "Course":
+        $("#studentCourse").addClass("has-error");
+        break;
+        case "Grade":
+        $("#studentGrade").addClass("has-error");
+        break;   
+      }
+    }
+    this.remove_red = function(){
+      $("#studentName").removeClass("has-error");
+      $("#studentCourse").removeClass("has-error");
+      $("#studentGrade").removeClass("has-error");
     }
   /**
    * Holds the local array of all students
@@ -314,15 +332,18 @@ app.controller("app_controller", function($log, shared_data) {
     this.input_validation = function(){
       var valid = this.length_validation("Name", this.input_name) && this.length_validation("Course", this.input_course) && this.length_validation("Grade", this.input_grade);
       if(valid){
+        shared_data.remove_red();
         this.send_server();
       }
     };
     this.length_validation = function(input_type, value){
       if(value.length > 25){
         shared_data.message(input_type + " is too long");
+        shared_data.red_input(input_type);
         return false;
       }else if(value.length <= 0){
-        shared_data.message(input_type + " input is needed");
+        shared_data.message(input_type + " input is required");
+        shared_data.red_input(input_type);
         return false;
       }
       return true;
