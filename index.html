@@ -1,9 +1,9 @@
 <!-- *********** 
-Project Name: SGT v3.0
+Project Name: SGT v3.1
 File Name: index.html
 Author: Lance Takiguchi
-Date: 10/06/2016 -> 10/10/16
-Objective: Adapt SGT to work via Angular.js
+Date: 10/10/16 Time:  15:53
+Objective: Handle server errors
 Prompt: 
  *********** -->
 <!doctype html>
@@ -25,7 +25,6 @@ Prompt:
                 <small class="col-md-3 pull-right">Grade Average : <span class="avgGrade label label-default"> {{ac.get_grade_average()}} </span></small>
             </h1>
             <!-- only show this element when the user gets to a mobile version -->
-            <!-- TODO: Copy above Angular code to here -->
             <h3 class="page-header col-sm-12 hidden-lg">Student Grade Table
                 <small class="pull-gright col-sm-3">Grade Average : <span ng-model="grade_average" class="avgGrade label label-default"> {{ac.get_grade_average()}} </span></small>
             </h3>
@@ -65,7 +64,7 @@ Prompt:
             </div>
             <div id="student_loading"></div>
             <div id="ux_display">
-                <h3 id="ux_title">Welcome</h3>
+                <h3 id="ux_title">{{fc.display()}}</h3>
             </div>
         </div>
         <div  ng-controller="table_controller as tc" ng-init="tc.get_server_data()" class="student-list-container col-md-9">
@@ -83,7 +82,7 @@ Prompt:
                         <td>{{student.name}}</td>
                         <td>{{student.course}}</td>
                         <td>{{student.grade}}</td>
-                        <td><button ng-click="tc.delete_handler(student)" type='button' class='btn btn-danger' onclick=''>Delete</button></td>
+                        <td><button ng-click="tc.invoke_delete(student)" type='button' class='btn btn-danger' onclick=''>Delete</button></td>
                     </tr>
                 </tbody>
             </table>

@@ -1,9 +1,9 @@
 /*
-Project Name: SGT v3.0
-File Name: index.html
+Project Name: SGT v3.1
+File Name: script.js
 Author: Lance Takiguchi
-Date: 10/06/2016 -> 10/10/16
-Objective: Adapt SGT to work via Angular.js
+Date: 10/10/16 Time:  15:53
+Objective: Handle server errors
 Prompt: 
 */
 /**
@@ -14,6 +14,25 @@ Prompt:
   * Service that holds all shared data between Angular controllers
   */
   app.service("shared_data", function(){
+    this.message = function(message, id){
+      switch(message){
+        case "delete sucessful":
+        this.display = "Student " + this.return_student(id) + " deleted.";
+        this.display_details = "";
+        break;
+        case "delete failed":
+        this.display = "Student " + this.return_student(id) + " could not be deleted."
+        this.display_details = "Cannot delete a student user did not add."
+        break;
+      }
+    }
+    this.display = "Welcome";
+    this.display_details = "";
+    this.current_display = function(){
+      var display = this.display;
+      var display_details = this.display_details;
+      return {display, display_details};
+    }
   /**
    * Holds the local array of all students
    * @type Array An array holding student objects that hold student's info
@@ -49,6 +68,14 @@ Prompt:
      this.add_student = function(student){
       this.all_students.push(student);
     };
+    this.return_student = function(id){
+      for(student_index in this.all_students){
+        if(this.all_students[student_index].id === id){
+          return this.all_students[student_index].name;
+        }
+      }
+      return false; //Student at id was not found
+    }
     /**
      * Takes an array to save as the array holding all the students
      * @param  Array roster An array holding all the students
@@ -90,6 +117,10 @@ Prompt:
         }
       }
       return false;
+    };
+    this.delete_result = null;
+    this.check_delete_result = function(){
+      return this.delete_result;
     }
   })
 /** controller that just calculates grade average */
@@ -106,13 +137,22 @@ app.controller("app_controller", function($log, shared_data) {
  app.controller("table_controller", function($http, $log, shared_data){
   var self_table_controller = this;
   /**
-   * Main delete_handler that asks the server to delete a student as well as the local array of students
+   * Main invoke_delete that asks the server to delete a student as well as the local array of students
    * @param  Object student Object that holds a student's info. student.id is of particular interest
    */
-   this.delete_handler = function(student){
-    //$log.log("table_controller delete_handler init");
+   this.invoke_delete = function(student){
+    //$log.log("table_controller invoke_delete init");
+    //$log.log(this.request_server_delete(student.id));
     this.request_server_delete(student.id);
-    shared_data.remove_student(student.id); //TODO: handle the bool return
+  };
+  this.handle_server_delete_response = function(response, delete_id){
+    //$log.log(response.data.success);
+    if(response.data.success){
+      shared_data.message("delete sucessful", delete_id);
+      shared_data.remove_student(delete_id);
+    }else{
+      shared_data.message("delete failed", delete_id);
+    }
   };
   /**
    * Grabs all the students on the server for inital page load
@@ -158,9 +198,11 @@ app.controller("app_controller", function($log, shared_data) {
     })
     .then(
       function(success_delete){
+        self_table_controller.handle_server_delete_response(success_delete, delete_id);
         //$log.info("request_server_delete sucessful!", success_delete);
       },
       function(fail_delete){
+        shared_data.delete_result = fail_delete;
         //$log.warn("request_server_delete failed! ", fail_delete);
       })
   }
@@ -170,6 +212,9 @@ app.controller("app_controller", function($log, shared_data) {
  */
  app.controller("form_controller", function($http, $log, shared_data) {
     //form_controller
+    this.display = function(){
+      return shared_data.current_display().display;
+    }
     this.input_name = "";
     this.input_course = "";
     this.input_grade = "";
