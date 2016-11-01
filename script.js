@@ -1,9 +1,11 @@
 /*
-Project Name: SGT v3.1
-File Name: script.js
+Project Name: SGT v4
+File Name: index.html
 Author: Lance Takiguchi
-Date: 10/10/16 Time:  15:53
-Objective: Handle server errors
+Date: 11/01/16 Time:  14:21
+Objective: Be able to view, add, and delete students from an online database
+Version: 4
+Version Objective: Set up the back end to be Firebase 
 Prompt: 
 */
 /**

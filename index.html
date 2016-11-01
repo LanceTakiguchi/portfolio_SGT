@@ -1,9 +1,11 @@
 <!-- *********** 
-Project Name: SGT v3.1
+Project Name: SGT v4
 File Name: index.html
 Author: Lance Takiguchi
-Date: 10/10/16 Time:  15:53
-Objective: Handle server errors
+Date: 11/01/16 Time:  14:21
+Objective: Be able to view, add, and delete students from an online database
+Version: 4
+Version Objective: Set up the back end to be Firebase 
 Prompt: 
 *********** -->
 <!doctype html>
@@ -13,7 +15,10 @@ Prompt:
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
     <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.8/angular.js"></script>
+    <script data-require="firebase3@*" data-semver="3.3.0" src="https://www.gstatic.com/firebasejs/3.3.0/firebase.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/3.5.0/firebase.js"></script>
     <script src="script.js"></script>
+    <script src="fb_script.js"></script>
     <link rel="stylesheet" href="style.css">
     <meta name="viewport" content="initial-scale=1, user-scalable=no">
 </head>
@@ -29,7 +34,6 @@ Prompt:
                 <small class="pull-gright col-sm-3">Grade Average : <span ng-model="grade_average" class="avgGrade label label-default"> {{ac.get_grade_average()}} </span></small>
             </h3>
         </div>
-        <hr>
         <div ng-controller="form_controller as fc" class="col-md-3 student-add-form pull-right">
             <h4 class="input-group-header">Add Student</h4>
             <form name="form">
