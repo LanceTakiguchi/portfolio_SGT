@@ -367,9 +367,7 @@ app.controller("app_controller", function($log, shared_data) {
       }
     }
     this.run_all_validations = function(){
-      if(this.run_length_validation() && this.run_exist_validation()){
-        this.send_server();
-      }
+      shared_data.message("invalid exist", -1, ["Name"])
     }
     this.run_exist_validation = function(){
       shared_data.remove_red();

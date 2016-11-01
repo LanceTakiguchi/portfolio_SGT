@@ -5,7 +5,7 @@ Author: Lance Takiguchi
 Date: 10/10/16 Time:  15:53
 Objective: Handle server errors
 Prompt: 
- *********** -->
+*********** -->
 <!doctype html>
 <html>
 <head>
@@ -32,32 +32,34 @@ Prompt:
         <hr>
         <div ng-controller="form_controller as fc" class="col-md-3 student-add-form pull-right">
             <h4 class="input-group-header">Add Student</h4>
-            <div class="form-group"  id="studentName">
-                <div class="input-group">
-                    <span class="input-group-addon">
-                        <span class="glyphicon glyphicon-user"></span>
-                    </span>
-                    <input ng-model="fc.input_name" type="text" class="form-control" name="studentName" placeholder="Student Name">
+            <form name="form">
+                <div class="form-group"  id="studentName">
+                    <div class="input-group">
+                        <span class="input-group-addon">
+                            <span class="glyphicon glyphicon-user"></span>
+                        </span>
+                        <input name="name" required ng-model="fc.input_name" type="text" class="form-control" name="studentName" placeholder="Student Name">
+                    </div>
                 </div>
-            </div>
-            <div class="form-group" id="studentCourse">
-                <div class="input-group">
-                    <span class="input-group-addon">
-                        <span class="glyphicon glyphicon-list-alt"></span>
-                    </span>
-                    <input ng-model="fc.input_course" type="text" class="form-control" name="course"
-                    placeholder="Student Course">
+                <div class="form-group" id="studentCourse">
+                    <div class="input-group">
+                        <span class="input-group-addon">
+                            <span class="glyphicon glyphicon-list-alt"></span>
+                        </span>
+                        <input name="course" required ng-model="fc.input_course" type="text" class="form-control" name="course"
+                        placeholder="Student Course">
+                    </div>
                 </div>
-            </div>
-            <div class="form-group" id="studentGrade">
-                <div class="input-group">
-                    <span class="input-group-addon">
-                        <span class="glyphicon glyphicon-education"></span>
-                    </span>
-                    <input ng-model="fc.input_grade" type="number" class="form-control" name="studentGrade"
-                    placeholder="Student Grade">
+                <div class="form-group" id="studentGrade">
+                    <div class="input-group">
+                        <span class="input-group-addon">
+                            <span class="glyphicon glyphicon-education"></span>
+                        </span>
+                        <input name="grade" required ng-model="fc.input_grade" type="number" class="form-control" name="studentGrade"
+                        placeholder="Student Grade">
+                    </div>
                 </div>
-            </div>
+            </form>
             <div class="control-group">
                 <button ng-click="fc.run_all_validations()" id="addButton" type="button" class="btn btn-success" onclick="">Add Student</button>
                 <button ng-click="fc.clear_inputs(true)" id="cancelButton" type="button" class="btn btn-default" onclick="">Clear</button>
