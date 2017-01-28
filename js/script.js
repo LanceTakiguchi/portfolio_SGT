@@ -1,13 +1,3 @@
-/*
-Project Name: SGT v4
-File Name: index.html
-Author: Lance Takiguchi
-Date: 11/01/16 Time:  14:21
-Objective: Be able to view, add, and delete students from an online database
-Version: 4
-Version Objective: Set up the back end to be Firebase 
-Prompt: 
-*/
 /**
  * AngularJS main app holding all controllers
  */
