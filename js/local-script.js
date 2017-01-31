@@ -20,7 +20,7 @@ app.config(function ($httpProvider) {
    * @type Number Represents the grade average
    */
     //TODO: Delete this temp id creator
-    this.id_count = 0;
+    this.id_count = -1;
     this.id_counter = function() {
       this.id_count++;
       return this.id_count;
@@ -80,7 +80,7 @@ app.config(function ($httpProvider) {
      this.delete_student = function(id){
       for(student_index in this.all_students){
         if(this.all_students[student_index].id === id){
-          this.all_students.splice(student_index, 0);
+          this.all_students.splice(student_index, 1);
           return true;
         }
       }
@@ -148,6 +148,7 @@ app.controller("app_controller", function($log, shared_data) {
    * @param  Object student The student that is trying to be deleted
    */
   this.invoke_delete = function(student) {
+    //TODO: Delete this log
     $log.info("Delete student", student.id);
     shared_data.delete_student(student.id);
   };
