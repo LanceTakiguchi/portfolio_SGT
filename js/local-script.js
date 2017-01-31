@@ -117,17 +117,22 @@ app.controller("app_controller", function($log, shared_data) {
   this.input_course = "";
   this.input_grade = "";
   this.all_students = [];
+  /**
+   * Clear DOM inputs
+   */
   this.clear_inputs = function(){
     this.input_name = "";
     this.input_course = "";
     this.input_grade = "";
   }
+  /**
+   * Take inputed student and add it into the shared_data
+   */
   this.new_student = function() {
-    $log.info("New student");
     var new_student = {};
     new_student.name = this.input_name;
     new_student.course = this.input_course;
-    new_student.name = this.input_grade;
+    new_student.grade = this.input_grade;
     new_student.id = shared_data.id_counter();
     shared_data.add_student(new_student);
     this.clear_inputs();
@@ -138,4 +143,12 @@ app.controller("app_controller", function($log, shared_data) {
  */
  app.controller("table_controller", function($http, $log, shared_data){
   this.students = shared_data.all_students;
+  /**
+   * Deletes student from shared_data
+   * @param  Object student The student that is trying to be deleted
+   */
+  this.invoke_delete = function(student) {
+    $log.info("Delete student", student.id);
+    shared_data.delete_student(student.id);
+  };
  });
