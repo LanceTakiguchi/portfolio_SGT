@@ -10,15 +10,7 @@ app.config(function ($httpProvider) {
   */
   app.service("shared_data", function(){
     var shared = this;
-  /**
-   * Holds the local array of all students
-   * @type Array An array holding student objects that hold student's info
-   */
-   this.all_students = [];
-  /**
-   * Variable holding the grade average
-   * @type Number Represents the grade average
-   */
+    this.all_students = [];
     //TODO: Delete this temp id creator
     this.id_count = -1;
     this.id_counter = function() {
@@ -152,5 +144,37 @@ app.controller("app_controller", function($log, shared_data) {
     //TODO: Delete this log
     $log.info("Delete student", student.id);
     shared_data.delete_student(student.id);
+  };
+  this.get_all_students = function() {
+    shared_data.get_fb_students();
+  };
+  this.config = {
+    apiKey: "AIzaSyAb-frJAyvwARPS4_zov4SiSglw9qG14dc",
+    authDomain: "introtest-fef98.firebaseapp.com",
+    databaseURL: "https://introtest-fef98.firebaseio.com",
+    storageBucket: "introtest-fef98.appspot.com",
+    messagingSenderId: "272459267595"
+  };
+  firebase.initializeApp(config);
+  this.fb_ref = firebase.database();
+
+  this.send_fb_student = {
+    id: 0003,
+    name: "Dan",
+    course: "Firebase 101",
+    grade: 96 
+  };
+  this.retrieve_students = function() {
+    fb_ref.ref("students").on("value", function(fb_data){
+      var save = fb_data.val();
+      console.log("snapshot: ", fb_data.val());
+    });
+  }
+  this.get_fb_students = function() {
+    var all_students = fb_controller.retrieve_students(); 
+    for (student in all_students) {
+      this.add_student(student);
+    }
+    return true;
   };
 });
