@@ -9,7 +9,7 @@ app.config(function ($httpProvider) {
   * Service that holds all shared data between Angular controllers
   */
   app.service("shared_data", function(){
-  var shared = this;
+    var shared = this;
   /**
    * Holds the local array of all students
    * @type Array An array holding student objects that hold student's info
@@ -110,7 +110,7 @@ app.controller("app_controller", function($log, shared_data) {
   }
 });
 /**
- * Controller for the UX inputs, clear functionality, and asking server to add student
+ * Controller for the UX inputs, clear functionality, asking server to add student, and form input validation
  */
  app.controller("form_controller", function($log, shared_data) {
   this.input_name = "";
@@ -120,7 +120,7 @@ app.controller("app_controller", function($log, shared_data) {
   /**
    * Clear DOM inputs
    */
-  this.clear_inputs = function(){
+   this.clear_inputs = function(){
     this.input_name = "";
     this.input_course = "";
     this.input_grade = "";
@@ -128,7 +128,7 @@ app.controller("app_controller", function($log, shared_data) {
   /**
    * Take inputed student and add it into the shared_data
    */
-  this.new_student = function() {
+   this.new_student = function() {
     var new_student = {};
     new_student.name = this.input_name;
     new_student.course = this.input_course;
@@ -147,9 +147,9 @@ app.controller("app_controller", function($log, shared_data) {
    * Deletes student from shared_data
    * @param  Object student The student that is trying to be deleted
    */
-  this.invoke_delete = function(student) {
+   this.invoke_delete = function(student) {
     //TODO: Delete this log
     $log.info("Delete student", student.id);
     shared_data.delete_student(student.id);
   };
- });
+});
