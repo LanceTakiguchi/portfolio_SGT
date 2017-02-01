@@ -24,37 +24,9 @@ Plunker: https://plnkr.co/edit/XYyzXiNbcxOR3JRQBwYL?p=preview
 // 	}
 // }
 
-app.controller("fb_controller", function($log, shared_data) {
-	this.config = {
-		apiKey: "AIzaSyAb-frJAyvwARPS4_zov4SiSglw9qG14dc",
-		authDomain: "introtest-fef98.firebaseapp.com",
-		databaseURL: "https://introtest-fef98.firebaseio.com",
-		storageBucket: "introtest-fef98.appspot.com",
-		messagingSenderId: "272459267595"
-	};
-	firebase.initializeApp(config);
-	this.fb_ref = firebase.database();
+// app.controller("fb_controller", function($log, shared_data) {
 
-	this.send_fb_student = {
-		id: 0003,
-		name: "Dan",
-		course: "Firebase 101",
-		grade: 96	
-	};
-	this.retrieve_students = function() {
-		fb_ref.ref("students").on("value", function(fb_data){
-			var save = fb_data.val();
-			console.log("snapshot: ", fb_data.val());
-		});
-	}
-	this.get_fb_students = function() {
-		var all_students = fb_controller.retrieve_students(); 
-		for (student in all_students) {
-			this.add_student(student);
-		}
-		return true;
-	};
-});
+// });
 // 4. Initialize firebase
 
 // 5. Create a reference to your firebase database
