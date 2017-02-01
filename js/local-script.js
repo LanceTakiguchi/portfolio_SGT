@@ -32,7 +32,8 @@ app.config(function ($httpProvider) {
    */
    this.calculate_grade_average = function(){
     if(this.all_students.length === 0){
-      return ""; //** Display nothing, as there is no average
+      this.grade_average = "N/A";
+      return this.grade_average; //** Display nothing, as there is no average
     }
     var sum = 0; // ** Holds the total of all the grades added together
     //** Get the sum of all the grades

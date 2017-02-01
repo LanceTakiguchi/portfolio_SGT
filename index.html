@@ -79,8 +79,8 @@ Version Objective: Restore SGT functionality
       </div>
   </form>
   <div class="control-group">
-    <button ng-click="fc.new_student()" id="addButton" type="button" class="btn btn-success" onclick="" ng-disabled="addStudentForm.$invalid">Add Student</button>
-    <button ng-click="fc.clear_inputs(true)" id="cancelButton" type="button" class="btn btn-default" onclick="">Clear</button>
+    <button ng-click="fc.new_student(); addStudentForm.name.$setPristine(); addStudentForm.course.$setPristine(); addStudentForm.grade.$setPristine()" id="addButton" type="button" class="btn btn-success" onclick="" ng-disabled="addStudentForm.$invalid">Add Student</button>
+    <button ng-click="fc.clear_inputs(); addStudentForm.name.$setPristine(); addStudentForm.course.$setPristine(); addStudentForm.grade.$setPristine()" id="cancelButton" type="button" class="btn btn-default" onclick="">Clear</button>
 </div>
 <div id="student_loading"></div>
 <br>
