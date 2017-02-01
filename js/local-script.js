@@ -135,6 +135,7 @@ app.controller("app_controller", function($log, shared_data) {
  * Controller for the displaying students on DOM
  */
  app.controller("table_controller", function($http, $log, shared_data){
+  this.students = shared_data.all_students;
   /**
    * Deletes student from shared_data
    * @param  Object student The student that is trying to be deleted
@@ -153,22 +154,24 @@ app.controller("app_controller", function($log, shared_data) {
   };
   firebase.initializeApp(this.config);
   this.fb_ref = firebase.database();
-  // this.retrieve_students = function() {
-  //   this.fb_ref.ref("students").on("value", function(fb_data){
-  //     var fb_students = fb_data.val();
-  //     var length = Object.keys(fb_students).length;
-  //     var count = 0;
-  //     for(keys in fb_students) {
-  //       var stu = fb_students[keys];
-  //       stu.id = keys;
-  //       shared_data.add_student(stu);
-  //       count++;
-  //       if(length == count){
-  //         console.log("snapshot: ", shared_data.all_students);
-  //         this.students = shared_data.all_students;
-  //       }
-  //     }
-  //   });
-  //   // shared_data.calculate_grade_average();
-  // };
+  this.retrieve_students = function() {
+    this.fb_ref.ref("students").on("value", function(fb_data){
+      var fb_students = fb_data.val();
+      var length = Object.keys(fb_students).length;
+      var count = 0;
+      for(keys in fb_students) {
+        var stu = fb_students[keys];
+        stu.id = keys;
+        shared_data.add_student(stu);
+        count++;
+        if(length == count){
+          console.log("snapshot: ", shared_data.all_students);
+          this.students = shared_data.all_students;
+          shared_data.calculate_grade_average();
+          console.log("load"); 
+        }
+      }
+    });
+    // shared_data.calculate_grade_average();
+  };
 });
