@@ -93,6 +93,27 @@ app.config(function ($httpProvider) {
       }
       return false;
     };
+    this.config = {
+      apiKey: "AIzaSyAb-frJAyvwARPS4_zov4SiSglw9qG14dc",
+      authDomain: "introtest-fef98.firebaseapp.com",
+      databaseURL: "https://introtest-fef98.firebaseio.com",
+      storageBucket: "introtest-fef98.appspot.com",
+      messagingSenderId: "272459267595"
+    };
+    firebase.initializeApp(this.config);
+    this.fb_ref = firebase.database();
+    var shar = this;
+    this.retrieve_students = function() {
+      this.fb_ref.ref("students").on("value", function(fb_data){
+        var fb_students = fb_data.val();
+        for(keys in fb_students) {
+          var stu = fb_students[keys];
+          stu.id = keys;
+          shar.add_student(stu);
+        }
+      });
+    };
+    $.apply(this.retrieve_students());
   })
 /** controller that just calculates grade average */
 app.controller("app_controller", function($log, shared_data) {
@@ -135,7 +156,7 @@ app.controller("app_controller", function($log, shared_data) {
  * Controller for the displaying students on DOM
  */
  app.controller("table_controller", function($http, $log, shared_data){
-  this.students = shared_data.all_students;
+  this.students = shared_data.return_students();
   /**
    * Deletes student from shared_data
    * @param  Object student The student that is trying to be deleted
@@ -144,34 +165,5 @@ app.controller("app_controller", function($log, shared_data) {
     //TODO: Delete this log
     $log.info("Delete student", student.id);
     shared_data.delete_student(student.id);
-  };
-  this.config = {
-    apiKey: "AIzaSyAb-frJAyvwARPS4_zov4SiSglw9qG14dc",
-    authDomain: "introtest-fef98.firebaseapp.com",
-    databaseURL: "https://introtest-fef98.firebaseio.com",
-    storageBucket: "introtest-fef98.appspot.com",
-    messagingSenderId: "272459267595"
-  };
-  firebase.initializeApp(this.config);
-  this.fb_ref = firebase.database();
-  this.retrieve_students = function() {
-    this.fb_ref.ref("students").on("value", function(fb_data){
-      var fb_students = fb_data.val();
-      var length = Object.keys(fb_students).length;
-      var count = 0;
-      for(keys in fb_students) {
-        var stu = fb_students[keys];
-        stu.id = keys;
-        shared_data.add_student(stu);
-        count++;
-        if(length == count){
-          console.log("snapshot: ", shared_data.all_students);
-          this.students = shared_data.all_students;
-          shared_data.calculate_grade_average();
-          console.log("load"); 
-        }
-      }
-    });
-    // shared_data.calculate_grade_average();
   };
 });
