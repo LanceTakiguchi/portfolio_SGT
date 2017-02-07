@@ -1,14 +1,28 @@
+var config = {
+      apiKey: "AIzaSyAb-frJAyvwARPS4_zov4SiSglw9qG14dc",
+      authDomain: "introtest-fef98.firebaseapp.com",
+      databaseURL: "https://introtest-fef98.firebaseio.com",
+      storageBucket: "introtest-fef98.appspot.com",
+      messagingSenderId: "272459267595"
+    };
+    firebase.initializeApp(config);
 /**
  * AngularJS main app holding all controllers
  */
- var app = angular.module("sgt_app", []);
+ var app = angular.module("sgt_app", ["firebase"]);
 // loading for each http request
 app.config(function ($httpProvider) {
 })
 /**
   * Service that holds all shared data between Angular controllers
   */
-  app.service("shared_data", function(){
+  app.service("shared_data", function($scope, $firebaseObject){
+    var ref = firebase.database().ref();
+    // var ref = firebase.database().ref().child("students");
+    $scope.data = $firebaseObject(ref);
+    // var syncObject = $firebaseObject(ref);
+    // syncObject.$bindTo($scope, "students")
+
     var shared = this;
     this.all_students = [];
     //TODO: Delete this temp id creator
@@ -93,27 +107,32 @@ app.config(function ($httpProvider) {
       }
       return false;
     };
-    this.config = {
-      apiKey: "AIzaSyAb-frJAyvwARPS4_zov4SiSglw9qG14dc",
-      authDomain: "introtest-fef98.firebaseapp.com",
-      databaseURL: "https://introtest-fef98.firebaseio.com",
-      storageBucket: "introtest-fef98.appspot.com",
-      messagingSenderId: "272459267595"
-    };
-    firebase.initializeApp(this.config);
-    this.fb_ref = firebase.database();
-    var shar = this;
-    this.retrieve_students = function() {
-      this.fb_ref.ref("students").on("value", function(fb_data){
-        var fb_students = fb_data.val();
-        for(keys in fb_students) {
-          var stu = fb_students[keys];
-          stu.id = keys;
-          shar.add_student(stu);
-        }
-      });
-    };
-    $.apply(this.retrieve_students());
+    // this.config = {
+    //   apiKey: "AIzaSyAb-frJAyvwARPS4_zov4SiSglw9qG14dc",
+    //   authDomain: "introtest-fef98.firebaseapp.com",
+    //   databaseURL: "https://introtest-fef98.firebaseio.com",
+    //   storageBucket: "introtest-fef98.appspot.com",
+    //   messagingSenderId: "272459267595"
+    // };
+    // firebase.initializeApp(this.config);
+    // this.fb_ref = firebase.database();
+    // this.ref = firebase.database().ref().child("students");
+    // this.sync_fb = $firebaseObject(this.ref);
+    // this.sync_fb.$bindTo($scope, "students");
+    // var shar = this;
+    // this.fb_ref.ref("students").on("value", function(fb_data){
+    //   $.apply(
+    //     function(){
+    //       var fb_students = fb_data.val();
+    //       for(keys in fb_students) {
+    //         var stu = fb_students[keys];
+    //         stu.id = keys;
+    //         shar.add_student(stu);
+    //       }
+    //       console.log(stu);
+    //     }
+    //     );
+    // });
   })
 /** controller that just calculates grade average */
 app.controller("app_controller", function($log, shared_data) {
