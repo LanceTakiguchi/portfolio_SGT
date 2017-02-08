@@ -21,6 +21,8 @@ Version Objective: Restore SGT Firebase Connection
     <script src="js/local-script.js"></script>
     <script src="js/fb-script.js"></script>
     <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css?family=Architects+Daughter" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <meta name="viewport" content="initial-scale=1, user-scalable=no">
 </head>
 <body ng-app="sgt_app">
@@ -62,33 +64,33 @@ Version Objective: Restore SGT Firebase Connection
                 </div>
                 <div role="alert">
                     <span class="error help-block" ng-show="addStudentForm.course.$error.required && addStudentForm.course.$dirty"> A course is required! </span>
+                </div>
+            </div>
+            <div class="form-group" id="studentGrade" ng-class="{'has-error': addStudentForm.grade.$invalid && addStudentForm.grade.$dirty, 'has-success': addStudentForm.grade.$dirty}">
+                <div class="input-group">
+                    <span class="input-group-addon">
+                        <span class="glyphicon glyphicon-education"></span>
+                    </span>
+                    <input name="grade" ng-model="fc.input_grade" type="number" class="form-control" name="studentGrade"
+                    placeholder="Student Grade" ng-maxlength="3" min="0" max="100" required>
+                    <span class="glyphicon glyphicon-remove form-control-feedback" aria-hidden="true" ng-show="addStudentForm.grade.$invalid && addStudentForm.grade.$dirty"></span>
+                    <span class="glyphicon glyphicon-ok form-control-feedback" aria-hidden="true" ng-show="addStudentForm.grade.$valid && addStudentForm.grade.$dirty"></span>
+                </div>
+                <div role="alert">
+                  <span class="error help-block" ng-show="addStudentForm.grade.$invalid && addStudentForm.grade.$dirty"> A grade between 0 and 100 is required! </span>
               </div>
           </div>
-          <div class="form-group" id="studentGrade" ng-class="{'has-error': addStudentForm.grade.$invalid && addStudentForm.grade.$dirty, 'has-success': addStudentForm.grade.$dirty}">
-            <div class="input-group">
-                <span class="input-group-addon">
-                    <span class="glyphicon glyphicon-education"></span>
-                </span>
-                <input name="grade" ng-model="fc.input_grade" type="number" class="form-control" name="studentGrade"
-                placeholder="Student Grade" ng-maxlength="3" min="0" max="100" required>
-                <span class="glyphicon glyphicon-remove form-control-feedback" aria-hidden="true" ng-show="addStudentForm.grade.$invalid && addStudentForm.grade.$dirty"></span>
-                <span class="glyphicon glyphicon-ok form-control-feedback" aria-hidden="true" ng-show="addStudentForm.grade.$valid && addStudentForm.grade.$dirty"></span>
-            </div>
-            <div role="alert">
-              <span class="error help-block" ng-show="addStudentForm.grade.$invalid && addStudentForm.grade.$dirty"> A grade between 0 and 100 is required! </span>
-          </div>
-      </div>
-  </form>
-  <div class="control-group">
-    <button ng-click="fc.new_student(); addStudentForm.name.$setPristine(); addStudentForm.course.$setPristine(); addStudentForm.grade.$setPristine()" id="addButton" type="button" class="btn btn-success" onclick="" ng-disabled="addStudentForm.$invalid">Add Student</button>
-    <button ng-click="fc.clear_inputs(); addStudentForm.name.$setPristine(); addStudentForm.course.$setPristine(); addStudentForm.grade.$setPristine()" id="cancelButton" type="button" class="btn btn-default" onclick="">Clear</button>
-</div>
-<div id="student_loading"></div>
-<br>
-<div id="ux_display">
-    <h4 id="ux_title">{{fc.display("title")}}</h4>
-    <p id="ux_details">{{fc.display("details")}}</p>
-</div>
+      </form>
+      <div class="control-group">
+        <button ng-click="fc.new_student(); addStudentForm.name.$setPristine(); addStudentForm.course.$setPristine(); addStudentForm.grade.$setPristine()" id="addButton" type="button" class="btn btn-success" onclick="" ng-disabled="addStudentForm.$invalid">Add Student</button>
+        <button ng-click="fc.clear_inputs(); addStudentForm.name.$setPristine(); addStudentForm.course.$setPristine(); addStudentForm.grade.$setPristine()" id="cancelButton" type="button" class="btn btn-default" onclick="">Clear</button>
+    </div>
+    <div id="student_loading"></div>
+    <br>
+    <div id="ux_display">
+        <h4 id="ux_title">{{fc.display("title")}}</h4>
+        <p id="ux_details">{{fc.display("details")}}</p>
+    </div>
 </div>
 <div  ng-controller="table_controller as tc" class="student-list-container col-md-9">
     <table class="student-list table">
@@ -111,6 +113,21 @@ Version Objective: Restore SGT Firebase Connection
     </table>
 </div>
 </div>
+<footer id="contact" class="footer">
+    <div class="container"> 
+     <div> <p class="text-center"> <a id="my_website" href="http://www.lancetakiguchi.com" target="_blank"> Lance Takiguchi </a> </p> </div>
+     <div>
+        <ul class="list-unstyled list-inline text-center">
+            <li>
+                <p id="contact_links"> <a href="https://www.linkedin.com/in/lancetakiguchi" target="_blank"> <i id="linkedin" class="fa fa-linkedin-square" aria-hidden="true"></i></a> </p>
+            </li>
+            <li> 
+                <p> <a href="https://github.com/LanceTakiguchi" target="_blank"><i id="github" class="fa fa-github" aria-hidden="true"></i></a></p>
+            </li>
+        </ul> 
+    </div>
+</div>
+</footer>
 </body>
 </html>
 

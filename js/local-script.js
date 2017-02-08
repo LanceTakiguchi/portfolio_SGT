@@ -1,11 +1,11 @@
-var config = {
+/*var config = {
       apiKey: "AIzaSyAb-frJAyvwARPS4_zov4SiSglw9qG14dc",
       authDomain: "introtest-fef98.firebaseapp.com",
       databaseURL: "https://introtest-fef98.firebaseio.com",
       storageBucket: "introtest-fef98.appspot.com",
       messagingSenderId: "272459267595"
     };
-    firebase.initializeApp(config);
+    firebase.initializeApp(config);*/
 /**
  * AngularJS main app holding all controllers
  */
@@ -16,10 +16,10 @@ app.config(function ($httpProvider) {
 /**
   * Service that holds all shared data between Angular controllers
   */
-  app.service("shared_data", function($scope, $firebaseObject){
-    var ref = firebase.database().ref();
+  app.service("shared_data", function(){ /* $scope, $firebaseObject */
+    // var ref = firebase.database().ref();
     // var ref = firebase.database().ref().child("students");
-    $scope.data = $firebaseObject(ref);
+    // $scope.data = $firebaseObject(ref);
     // var syncObject = $firebaseObject(ref);
     // syncObject.$bindTo($scope, "students")
 
