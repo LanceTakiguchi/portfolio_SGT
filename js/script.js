@@ -138,3 +138,12 @@ app.controller("app_controller", function($log, shared_data) {
     }
 
   });
+
+ $(document).ready(function() {
+    $('.commentarea').keydown(function(event) {
+        if (event.keyCode == 13) {
+            this.form.submit();
+            return false;
+         }
+    });
+});

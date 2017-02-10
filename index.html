@@ -39,7 +39,7 @@ Version Objective: Restore SGT Firebase Connection
         </div>
         <div ng-controller="form_controller as fc" class="col-md-3 student-add-form pull-right">
             <h4 class="input-group-header">Add Student</h4>
-            <form name="addStudentForm" novalidate>
+            <form name="addStudentForm" novalidate ng-submit="fc.new_student(); addStudentForm.name.$setPristine(); addStudentForm.course.$setPristine(); addStudentForm.grade.$setPristine()">
                 <div class="form-group" id="studentName" ng-class="{'has-error': addStudentForm.name.$invalid && addStudentForm.name.$dirty, 'has-success': addStudentForm.name.$dirty}">
                     <div class="input-group">
                         <span class="input-group-addon">
@@ -71,7 +71,7 @@ Version Objective: Restore SGT Firebase Connection
                     <span class="input-group-addon">
                         <span class="glyphicon glyphicon-education"></span>
                     </span>
-                    <input name="grade" ng-model="fc.input_grade" type="number" class="form-control" name="studentGrade"
+                    <input id="form_grade" name="grade" ng-model="fc.input_grade" type="number" class="form-control" name="studentGrade"
                     placeholder="Student Grade" ng-maxlength="3" min="0" max="100" required>
                     <span class="glyphicon glyphicon-remove form-control-feedback" aria-hidden="true" ng-show="addStudentForm.grade.$invalid && addStudentForm.grade.$dirty"></span>
                     <span class="glyphicon glyphicon-ok form-control-feedback" aria-hidden="true" ng-show="addStudentForm.grade.$valid && addStudentForm.grade.$dirty"></span>
@@ -80,11 +80,11 @@ Version Objective: Restore SGT Firebase Connection
                   <span class="error help-block" ng-show="addStudentForm.grade.$invalid && addStudentForm.grade.$dirty"> A grade between 0 and 100 is required! </span>
               </div>
           </div>
-      </form>
-      <div class="control-group">
-        <button ng-click="fc.new_student(); addStudentForm.name.$setPristine(); addStudentForm.course.$setPristine(); addStudentForm.grade.$setPristine()" id="addButton" type="button" class="btn btn-success" onclick="" ng-disabled="addStudentForm.$invalid">Add Student</button>
-        <button ng-click="fc.clear_inputs(); addStudentForm.name.$setPristine(); addStudentForm.course.$setPristine(); addStudentForm.grade.$setPristine()" id="cancelButton" type="button" class="btn btn-default" onclick="">Clear</button>
-    </div>
+          <div class="control-group">
+            <button id="addButton" type="submit" class="btn btn-success" onclick="" ng-disabled="addStudentForm.$invalid">Add Student</button>
+            <button ng-click="fc.clear_inputs(); addStudentForm.name.$setPristine(); addStudentForm.course.$setPristine(); addStudentForm.grade.$setPristine()" id="cancelButton" type="button" class="btn btn-default" onclick="">Clear</button>
+        </div>
+    </form>
     <div id="student_loading"></div>
     <br>
     <div id="ux_display">

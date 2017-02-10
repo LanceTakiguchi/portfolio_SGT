@@ -133,7 +133,7 @@ app.config(function ($httpProvider) {
     //     }
     //     );
     // });
-  })
+})
 /** controller that just calculates grade average */
 app.controller("app_controller", function($log, shared_data) {
   this.grade_average = shared_data.calculate_grade_average();
