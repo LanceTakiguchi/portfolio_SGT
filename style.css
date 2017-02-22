@@ -1,28 +1,11 @@
-.loader {
-    margin-top: 2vh;
-    border: 16px solid #f3f3f3; /* Light grey */
-    border-top: 16px solid #3498db; /* Blue */
-    border-radius: 50%;
-    width: 80px;
-    height: 80px;
-    animation: spin .5s linear infinite;
-}
-
-@keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
-}
-
 #addButton{
 	position: relative; /*So that z-index applies*/
 	z-index: 2;
 }
-
 #cancelButton{
 	position: relative; /*So that z-index applies*/
 	z-index: 2;
 }
-
 body {
     line-height: 0;
     /* Line Paper Background */
@@ -47,9 +30,6 @@ body {
 #my_website {
     margin: 3em 0 1.4em 0;
 }
-/*#contact div p:first-child: {
-    margin: 1.7em 0 0 0;
-}*/
 #contact div li a {
     font-size: 1.6em;
 }
