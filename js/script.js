@@ -1,7 +1,7 @@
 /**
  * AngularJS main app holding all controllers
  */
- var app = angular.module("sgt_app");
+var app = angular.module("sgt_app", []);
 // loading for each http request
 app.config(function ($httpProvider) {
 })
