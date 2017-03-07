@@ -12,10 +12,10 @@
 
 ## Version pv1.0
 * Date: 2017/02/21
-* Description: Finalized Released. 
-** Updated README to have links, a screenshot, a planned addtions section, learning section.
-** Added Github Links for this app.
-** Remove code that is still in development.
+#### Description: Finalized Released. 
+* Updated README to have links, a screenshot, a planned addtions section, learning section.
+* Added Github Links for this app.
+* Remove code that is still in development.
 
 ## The Learning Experince
 I have remade this app a couple of times. The first time I coded
