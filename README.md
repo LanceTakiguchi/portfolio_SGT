@@ -1,7 +1,7 @@
 # SGT
 * Date: 2017/01/28
 * Author: Lance Takiguchi
-* Description: Student Grade Table: An application for teachers to view student grade records. They can add, edit, or delete students and their records. Ultalizes Bootstrap and Angular.JS. Plans to three way bind with Firebase.
+* Description: Student Grade Table: An application for teachers to view student grade records. They can add, edit, or delete students and their records. Utilizes Bootstrap and AngularJS. Plans to three-way bind with Firebase.
 
 ## Live Link
 * http://lancetakiguchi.com/apps/sgt_app/
@@ -39,17 +39,17 @@
 * README: Future Features [D: 1 Im: 1] - Edit students, Sort
 
 
-## The Learning Experince
+## The Learning Experience
 I have remade this app a couple of times. The first time I coded
-this I did it in plain jQuery. Then a third side was added with a 
+this I did it in plain jQuery. Then a third side was added to a 
 server hosted by LearningFuze accessed with a regular AJAX call.
 Then I used AngularJS to bind the javascript and the DOM. Finally,
 and the part that I have yet to work properly, I am to use Firebase
-as the backend. With Firebase and AngularJS, I can do a three way
+as the backend. With Firebase and AngularJS, I can do a three-way
 binding, which means any changes on the server immediately get
-updated on the browers, and vice versa. This was an entertaining
-diffcult project that tested combining multiple frameworks together.
-I plan to fix the three way binding in the near future, but for now,
+updated on the browser, and vice versa. This was an entertaining
+difficult project that tested combining multiple frameworks together.
+I plan to fix the three-way binding in the near future, but for now,
 it is a great display of AngularJS.
 
 ## Web Development Utilized 
