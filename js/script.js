@@ -10,7 +10,8 @@ app.config(function ($httpProvider) {
   */
   app.service("shared_data", function(){
     var shared = this;
-    this.all_students = [];
+    // TODO: Change this.all_students into an empty array
+    this.all_students = [{course: "Math", grade: 84, id: 101, name: "Lance Takiguchi"}, {course: "Woodcutting", grade: 52, id: 2, name: "Mark Johnson"}, {course: "Painting 101", grade: 73, id: 3, name: "Sally Cane"}, {course: "Using the Force", grade: 89, id: 4, name: "Luke Skywalker"}, {course: "Web Development", grade: 96, id: 5, name: "Lance T"}, {course: "Writing 39B", grade: 78, id: 6, name: "Nick Dean"}, {course: "SSBM", grade: 98, id: 7, name: "Armada"}, {course: "Math 2B", grade: 91, id: 8, name: "Kate Wilson"}];
     this.id_count = -1;
     this.id_counter = function() {
       this.id_count++;
