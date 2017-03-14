@@ -5,17 +5,39 @@
 
 ## Live Link
 * http://lancetakiguchi.com/apps/sgt_app/
+
 ## Portfolio
 * http://lancetakiguchi.com/
 
 ![alt tag](http://lancetakiguchi.com/assets/images/apps/sgt_app.png?raw=true "SGT pv1.0 | Lance Takiguchi App")
 
-## Version pv1.0
-* Date: 2017/02/21
-#### Description: Finalized Released. 
-* Updated README to have links, a screenshot, a planned addtions section, learning section.
-* Added Github Links for this app.
-* Remove code that is still in development.
+## Version pv1.1
+* Date: 2017/03/13
+
+#### Description: First feedback round from LFZ. Minor UX & UI Changes. 
+
+#### HTML & CSS
+* Contact: links [D: 1 Im: 1] - Redirect project resumes to main website's resume
+
+#### JS
+* JS: Add [D: 1 Im: 1] - Initializing student data (fake, local, not from server)
+
+#### AngularFire
+* Firebase/Angular [D: 5 Im: 2] - Connect with server (Note: Probably for a future version)
+
+#### AngularJS
+* AngularJS: Inputs [D: 2 Im: 1] - When empty, do nothing
+* AngularJS: Inputs [D: 2 Im: 1] - Throw in spacing with SGT inputs
+* AngularJS: Table (Optional) - [D: 4 Im: 3] - Edit students
+* AngularJS: Table (Optional) - [D: 4 Im: 3] - Sort students
+
+
+#### Github
+* README: Spelling & Grammar [D: 1 Im: 1] - Check
+* README: Syntax [D: 1 Im: 1] - Portfolio header did not work
+* Files: Delete [D: 1 Im: 1] - .idea (SGT)
+* README: Future Features [D: 1 Im: 1] - Edit students, Sort
+
 
 ## The Learning Experince
 I have remade this app a couple of times. The first time I coded
@@ -44,3 +66,5 @@ it is a great display of AngularJS.
 * Application descriptions.
 * Displaying a loading icon for UX.
 * Fix the inputs section as sticky on the screen, just for smaller resolutions.
+* Edit existing student entries data
+* Sort the students by name, course, or grade.
