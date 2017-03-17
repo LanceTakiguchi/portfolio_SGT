@@ -105,7 +105,19 @@ app.controller("app_controller", function(shared_data) {
 /**
  * Controller for the UX inputs, clear functionality, asking server to add student, and form input validation
  */
- app.controller("form_controller", function(shared_data) {
+ app.controller("form_controller", function(shared_data, $scope) {
+  $scope.check = function() {
+    var x = $scope.fc.input_grade;
+    if(typeof x === "undefined"){
+      $scope.addStudentForm.grade.$setPristine();
+    }
+    else if(x < 0 || x > 100){
+      $scope.addStudentForm.grade.$setValidity("inRange", false);
+    }
+    else {
+      $scope.addStudentForm.grade.$setValidity("inRange", true); //TODO
+    }
+  }
   this.input_name = "";
   this.input_course = "";
   this.input_grade = "";

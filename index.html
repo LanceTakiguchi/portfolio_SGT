@@ -59,7 +59,7 @@ Version Objective: Fix the Calculator to the LFZ first feedback round.
                         <span class="glyphicon glyphicon-education"></span>
                     </span>
                     <input id="form_grade" name="grade" ng-model="fc.input_grade" type="number" class="form-control" name="studentGrade"
-                    placeholder="Student Grade" ng-maxlength="3" min="0" max="100" required>
+                    placeholder="Student Grade" ng-keyup="check()" required>
                     <span class="glyphicon glyphicon-remove form-control-feedback" aria-hidden="true" ng-show="addStudentForm.grade.$invalid && addStudentForm.grade.$dirty"></span>
                     <span class="glyphicon glyphicon-ok form-control-feedback" aria-hidden="true" ng-show="addStudentForm.grade.$valid && addStudentForm.grade.$dirty"></span>
                 </div>
