@@ -9,7 +9,14 @@
 #invalid_grade span{
     margin-top: 1em;
 }
-
+/*Adjust number selector location*/
+input[type=number]::-webkit-inner-spin-button, 
+input[type=number]::-webkit-outer-spin-button { 
+    /*-webkit-appearance: none;*/
+    /*-moz-appearance: none;*/
+    /*appearance: none;*/
+    margin-right: 1.5em; 
+}
 body {
     line-height: 0;
     /* Line Paper Background */
