@@ -6,6 +6,10 @@
 	position: relative; /*So that z-index applies*/
 	z-index: 2;
 }
+#invalid_grade span{
+    margin-top: 1em;
+}
+
 body {
     line-height: 0;
     /* Line Paper Background */

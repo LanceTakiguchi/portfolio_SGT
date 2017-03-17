@@ -63,7 +63,7 @@ Version Objective: Fix the Calculator to the LFZ first feedback round.
                     <span class="glyphicon glyphicon-remove form-control-feedback" aria-hidden="true" ng-show="addStudentForm.grade.$invalid && addStudentForm.grade.$dirty"></span>
                     <span class="glyphicon glyphicon-ok form-control-feedback" aria-hidden="true" ng-show="addStudentForm.grade.$valid && addStudentForm.grade.$dirty"></span>
                 </div>
-                <div role="alert">
+                <div id="invalid_grade" role="alert">
                   <span class="error help-block" ng-show="addStudentForm.grade.$invalid && addStudentForm.grade.$dirty"> A grade between 0 and 100 is required! </span>
               </div>
           </div>
