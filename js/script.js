@@ -1,15 +1,21 @@
 /**
  * AngularJS main app holding all controllers
  */
-var app = angular.module("sgt_app", ["firebase"]);
+ var app = angular.module("sgt_app", ["firebase"]);
 // loading for each http request
 app.config(function ($httpProvider) {
 })
 /**
   * Service that holds all shared data between Angular controllers
   */
-  app.service("shared_data", function(){
-    var shared = this;
+  app.service("shared_data", function($scope){
+    var ref = firebase.database().ref().child("data");
+  // download the data into a local object
+  var syncObject = $firebaseObject(ref);
+  // synchronize the object with a three-way data binding
+  // click on `index.html` above to see it used in the DOM!
+  syncObject.$bindTo($scope, "data");
+  var shared = this;
     // TODO: Change this.all_students into an empty array
     this.all_students = [{course: "Math", grade: 84, id: 101, name: "Lance Takiguchi"}, {course: "Woodcutting", grade: 52, id: 2, name: "Mark Johnson"}, {course: "Painting 101", grade: 73, id: 3, name: "Sally Cane"}, {course: "Using the Force", grade: 89, id: 4, name: "Luke Skywalker"}, {course: "Web Development", grade: 96, id: 5, name: "Lance T"}, {course: "Writing 39B", grade: 78, id: 6, name: "Nick Dean"}, {course: "SSBM", grade: 98, id: 7, name: "Armada"}, {course: "Math 2B", grade: 91, id: 8, name: "Kate Wilson"}];
     this.id_count = -1;
@@ -93,7 +99,7 @@ app.config(function ($httpProvider) {
       }
       return false;
     };
-})
+  })
 /** controller that just calculates grade average */
 app.controller("app_controller", function(shared_data) {
   this.grade_average = shared_data.calculate_grade_average();
@@ -129,6 +135,7 @@ app.controller("app_controller", function(shared_data) {
     this.input_name = "";
     this.input_course = "";
     this.input_grade = "";
+    console.log(this.test_var);
   }
   /**
    * Take inputed student and add it into the shared_data
