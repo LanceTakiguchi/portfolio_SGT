@@ -11,7 +11,7 @@
 
 ![alt tag](http://lancetakiguchi.com/assets/images/apps/sgt_app.png?raw=true "SGT pv1.0 | Lance Takiguchi App")
 
-#Version pv2.0
+## Version pv2.0
 * Date: 2017/04/20
 
 #### Description: Creating working backend in Firebase either through Angular.JS & AngularFire, or AJAX
