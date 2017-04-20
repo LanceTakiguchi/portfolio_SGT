@@ -11,6 +11,11 @@
 
 ![alt tag](http://lancetakiguchi.com/assets/images/apps/sgt_app.png?raw=true "SGT pv1.0 | Lance Takiguchi App")
 
+#Version pv2.0
+* Date: 2017/04/20
+
+#### Description: Creating working backend in Firebase either through Angular.JS & AngularFire, or AJAX
+
 ## Version pv1.1
 * Date: 2017/03/13
 
@@ -62,7 +67,6 @@ it is a great display of AngularJS.
 * git
 
 ## Future Features
-* Three way binding with Firebase using AngularFire.
 * Application descriptions.
 * Displaying a loading icon for UX.
 * Fix the inputs section as sticky on the screen, just for smaller resolutions.
