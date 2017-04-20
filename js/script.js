@@ -8,6 +8,7 @@ app.config(function ($httpProvider) {
 /**
   * Service that holds all shared data between Angular controllers
   */
+ //TODO: This is where I tried doing steps 4/5 in the quick setup for AngularFire
   app.service("shared_data", function($scope){
     var ref = firebase.database().ref().child("data");
   // download the data into a local object
