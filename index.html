@@ -1,0 +1,118 @@
+<!-- *********** 
+Project Name: SGT (Student Grade Table)
+File Name: index.html
+Author: Lance Takiguchi
+Date: 04/20/17 Time: 00:56
+Objective: Be able to view, add, and delete students from an online database
+Version: pv2.0
+Branch: Working_backend
+Version Objective: Create a working backend either through AngularFire & Angular.JS or via AJAX calls
+*********** -->
+<!doctype html>
+<html>
+<head>
+    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+    <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.1/angular.min.js"></script>
+    <script src="js/script.js"></script>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css?family=Architects+Daughter" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <meta name="viewport" content="initial-scale=1, user-scalable=no">
+</head>
+<body ng-app="sgt_app">
+    <div ng-controller="app_controller as ac" class="container">
+        <div class="row">
+            <!-- only show this element when the isnt on mobile -->
+            <h1 class="page-header col-md-12 visible-lg">Student Grade Table
+                <small class="col-md-3 pull-right">Grade Average : <span class="avgGrade label label-default"> {{ac.get_grade_average()}} </span></small>
+            </h1>
+            <!-- only show this element when the user gets to a mobile version -->
+            <h3 class="page-header col-sm-12 hidden-lg">Student Grade Table
+                <small class="pull-gright col-sm-3">Grade Average : <span ng-model="grade_average" class="avgGrade label label-default"> {{ac.get_grade_average()}} </span></small>
+            </h3>
+        </div>
+        <div ng-controller="form_controller as fc" class="col-md-3 student-add-form pull-right">
+            <h4 class="input-group-header">Add Student</h4>
+            <form name="addStudentForm" novalidate ng-submit="fc.new_student(); addStudentForm.name.$setPristine(); addStudentForm.course.$setPristine(); addStudentForm.grade.$setPristine()">
+                <div class="form-group" id="studentName" ng-class="{'has-success': addStudentForm.name.$valid}">
+                    <div class="input-group">
+                        <span class="input-group-addon">
+                            <span class="glyphicon glyphicon-user"></span>
+                        </span>
+                        <input name="name" ng-model="fc.input_name" type="text" class="form-control" name="studentName" placeholder="Student Name" required>
+                        <span class="glyphicon glyphicon-ok form-control-feedback" aria-hidden="true" ng-show="addStudentForm.name.$valid"></span>
+                    </div>
+              </div>
+              <div class="form-group" id="studentCourse" ng-class="{'has-success': addStudentForm.course.$valid}">
+                <div class="input-group">
+                    <span class="input-group-addon">
+                        <span class="glyphicon glyphicon-list-alt"></span>
+                    </span>
+                    <input name="course" ng-model="fc.input_course" type="text" class="form-control" name="course" placeholder="Student Course" required>
+                    <span class="glyphicon glyphicon-ok form-control-feedback" aria-hidden="true" ng-show="addStudentForm.course.$valid && addStudentForm.course.$dirty"></span>
+                </div>
+            </div>
+            <div class="form-group" id="studentGrade" ng-class="{'has-error': addStudentForm.grade.$invalid && addStudentForm.grade.$dirty, 'has-success': addStudentForm.grade.$valid}">
+                <div class="input-group">
+                    <span class="input-group-addon">
+                        <span class="glyphicon glyphicon-education"></span>
+                    </span>
+                    <input id="form_grade" name="grade" ng-model="fc.input_grade" type="number" class="form-control" name="studentGrade"
+                    placeholder="Student Grade" ng-keyup="check()" required>
+                    <span class="glyphicon glyphicon-remove form-control-feedback" aria-hidden="true" ng-show="addStudentForm.grade.$invalid && addStudentForm.grade.$dirty"></span>
+                    <span class="glyphicon glyphicon-ok form-control-feedback" aria-hidden="true" ng-show="addStudentForm.grade.$valid && addStudentForm.grade.$dirty"></span>
+                </div>
+                <div id="invalid_grade" role="alert">
+                  <span class="error help-block" ng-show="addStudentForm.grade.$invalid && addStudentForm.grade.$dirty"> A grade between 0 and 100 is required! </span>
+              </div>
+          </div>
+          <div class="control-group">
+            <button id="addButton" type="submit" class="btn btn-success" onclick="" ng-disabled="addStudentForm.$invalid">Add Student</button>
+            <button ng-click="fc.clear_inputs(); addStudentForm.grade.$setPristine()" id="cancelButton" type="button" class="btn btn-default" onclick="">Clear</button>
+        </div>
+    </form>
+    <div id="student_loading"></div>
+    <br>
+    <div id="ux_display">
+        <h4 id="ux_title">{{fc.display("title")}}</h4>
+        <p id="ux_details">{{fc.display("details")}}</p>
+    </div>
+</div>
+<div  ng-controller="table_controller as tc" class="student-list-container col-md-9">
+    <table class="student-list table">
+        <thead>
+            <tr>
+                <th>Student Name</th>
+                <th>Student Course</th>
+                <th>Student Grade</th>
+                <th>Operations</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="student in tc.students">
+                <td>{{student.name}}</td>
+                <td>{{student.course}}</td>
+                <td>{{student.grade}}</td>
+                <td><button ng-click="tc.invoke_delete(student)" type='button' class='btn btn-danger' onclick=''>Delete</button></td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+</div>
+<footer id="contact" class="footer">
+    <div class="container"> 
+       <div id="my_website"> <p class="text-center"> <a href="http://www.lancetakiguchi.com" target="_blank"> Lance Takiguchi </a> </p> </div>
+       <div>
+        <ul class="list-unstyled list-inline text-center">
+            <li><p id="contact_links"><a href="https://www.linkedin.com/in/lancetakiguchi" target="_blank"><i id="linkedin" class="fa fa-linkedin-square" aria-hidden="true"></i></a></p></li>
+            <li><p><a href="https://github.com/LanceTakiguchi/portfolio_SGT" target="_blank"><i id="github" class="fa fa-github" aria-hidden="true"></i></a></p></li>
+            <li><p><a href="http://lancetakiguchi.com/assets/docs/LanceTakiguchiResume.pdf" target="_blank"><i id="resume" class="fa fa-file-pdf-o" aria-hidden="true"></i></a></p></li>
+        </ul> 
+    </div>
+</div>
+</footer>
+</body>
+</html>
+
