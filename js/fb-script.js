@@ -8,7 +8,3 @@ var config = {
 	messagingSenderId: "272459267595"
 };
 firebase.initializeApp(config);
-
-// app.controller("app_controller", function(shared_data) {
-// this.test_var = "17";
-// });

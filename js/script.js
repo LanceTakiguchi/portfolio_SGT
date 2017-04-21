@@ -8,15 +8,9 @@ app.config(function ($httpProvider) {
 /**
   * Service that holds all shared data between Angular controllers
   */
- //TODO: This is where I tried doing steps 4/5 in the quick setup for AngularFire
-  app.service("shared_data", function($scope){
-    var ref = firebase.database().ref().child("data");
-  // download the data into a local object
-  var syncObject = $firebaseObject(ref);
-  // synchronize the object with a three-way data binding
-  // click on `index.html` above to see it used in the DOM!
-  syncObject.$bindTo($scope, "data");
-  var shared = this;
+  app.service("shared_data", ["$firebaseObject",
+   function($firebaseObject){
+    var shared = this;
     // TODO: Change this.all_students into an empty array
     this.all_students = [{course: "Math", grade: 84, id: 101, name: "Lance Takiguchi"}, {course: "Woodcutting", grade: 52, id: 2, name: "Mark Johnson"}, {course: "Painting 101", grade: 73, id: 3, name: "Sally Cane"}, {course: "Using the Force", grade: 89, id: 4, name: "Luke Skywalker"}, {course: "Web Development", grade: 96, id: 5, name: "Lance T"}, {course: "Writing 39B", grade: 78, id: 6, name: "Nick Dean"}, {course: "SSBM", grade: 98, id: 7, name: "Armada"}, {course: "Math 2B", grade: 91, id: 8, name: "Kate Wilson"}];
     this.id_count = -1;
@@ -100,7 +94,13 @@ app.config(function ($httpProvider) {
       }
       return false;
     };
-  })
+    this.run_cake = function(my_cakes) {
+      var ref = firebase.database().ref("rooms").push(); 
+      var angel_cake = ref.child(my_cakes);
+      // var angel_cake = ref;
+      return $firebaseObject(angel_cake);
+    }
+  }]);
 /** controller that just calculates grade average */
 app.controller("app_controller", function(shared_data) {
   this.grade_average = shared_data.calculate_grade_average();
@@ -112,16 +112,18 @@ app.controller("app_controller", function(shared_data) {
 /**
  * Controller for the UX inputs, clear functionality, asking server to add student, and form input validation
  */
- app.controller("form_controller", function(shared_data, $scope) {
-  $scope.check = function() {
-    var x = $scope.fc.input_grade;
-    if(typeof x === "undefined"){
-      $scope.addStudentForm.grade.$setPristine();
-    }
-    else if(x < 0 || x > 100){
-      $scope.addStudentForm.grade.$setValidity("inRange", false);
-    }
-    else {
+ app.controller("form_controller", ["$scope", "shared_data",
+  function($scope, shared_data){
+
+$scope.check = function() {
+  var x = $scope.fc.input_grade;
+  if(typeof x === "undefined"){
+    $scope.addStudentForm.grade.$setPristine();
+  }
+  else if(x < 0 || x > 100){
+    $scope.addStudentForm.grade.$setValidity("inRange", false);
+  }
+  else {
       $scope.addStudentForm.grade.$setValidity("inRange", true); //TODO
     }
   }
@@ -150,11 +152,13 @@ app.controller("app_controller", function(shared_data) {
     shared_data.add_student(new_student);
     this.clear_inputs();
   }
-});
+}
+]);
  /**
  * Controller for the displaying students on DOM
  */
- app.controller("table_controller", function($http, shared_data){
+ app.controller("table_controller", ["$scope", "shared_data", 
+  function($scope, shared_data){
   this.students = shared_data.return_students();
   /**
    * Deletes student from shared_data
@@ -163,4 +167,23 @@ app.controller("app_controller", function(shared_data) {
    this.invoke_delete = function(student) {
     shared_data.delete_student(student.id);
   };
-});
+  shared_data.run_cake('-KiCXaNJVhvBnDdWNiwl').$bindTo($scope, "profile");
+  // shared_data.run_cake('students').$bindTo($scope, "profile");
+    // cookie.$bindTo($scope, "profile");
+  // TODO
+  // var ref = firebase.database().ref();
+  // $scope.cupcakes = $firebaseObject(ref.child('students').child('-KiCXaNJVhvBnDdWNiwl'));
+
+  // download the data into a local object
+  // var syncObject = $firebaseObject(ref);
+  // synchronize the object with a three-way data binding
+  // syncObject.$bindTo($scope, "students");
+
+  // var fb = firebase.database().ref();
+  // shared_data.test = $firebaseObject(fb);
+
+  // fb.ref('students').on('value', function(snapshot) {
+  //   updated_roster = snapshot.val();
+  // });  
+}
+]);
