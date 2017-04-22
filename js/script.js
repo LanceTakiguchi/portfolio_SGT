@@ -105,8 +105,10 @@ app.config(function ($httpProvider) {
       var all = [];
       fb.on('value', function(snapshot) {
         var length = all.length;
-        snapshot.forEach(function(student) {
-          all.push(student.val()); // Add new updated elements
+        snapshot.forEach(function(student){
+          var kid = student.val();
+          kid.id = student.key; 
+          all.push(kid); // Add new updated elements
         });
         all.splice(0, length); // Remove old elements from array
       });
@@ -178,7 +180,7 @@ app.controller("app_controller", function(shared_data) {
    * @param  Object student The student that is trying to be deleted
    */
    this.invoke_delete = function(student) {
-    shared_data.delete_student(student.id);
+    fb.child(student.id).remove();
   };
 }
 ]);
