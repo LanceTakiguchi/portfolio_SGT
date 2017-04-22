@@ -2,6 +2,7 @@
  * AngularJS main app holding all controllers
  */
  var app = angular.module("sgt_app", ["firebase"]);
+ var fb = firebase.database().ref('students');
 // loading for each http request
 app.config(function ($httpProvider) {
 })
@@ -42,7 +43,11 @@ app.config(function ($httpProvider) {
      * @param Object student An Object with the student's name, course, grade, and id
      */
      this.add_student = function(student){
-      this.all_students.push(student);
+      fb.push().set({
+        name: student.name,
+        course: student.course,
+        grade: student.grade
+      });
     };
     this.return_student = function(id){
       for(student_index in this.all_students){
@@ -96,7 +101,6 @@ app.config(function ($httpProvider) {
       return false;
     };
     this.fb_ref = function() {
-      var fb = firebase.database().ref('students');
       var obj = new $firebaseObject(fb); 
       var all = [];
       fb.on('value', function(snapshot) {
@@ -105,7 +109,7 @@ app.config(function ($httpProvider) {
           all.push(student.val()); // Add new updated elements
         });
         all.splice(0, length); // Remove old elements from array
-        });
+      });
       this.students = all;
       return this.students;
     }
