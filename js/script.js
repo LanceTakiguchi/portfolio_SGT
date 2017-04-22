@@ -100,10 +100,12 @@ app.config(function ($httpProvider) {
       var obj = new $firebaseObject(fb); 
       var all = [];
       fb.on('value', function(snapshot) {
+        var length = all.length;
         snapshot.forEach(function(student) {
-          all.push(student.val());
+          all.push(student.val()); // Add new updated elements
         });
-      });
+        all.splice(0, length); // Remove old elements from array
+        });
       this.students = all;
       return this.students;
     }
@@ -131,13 +133,13 @@ app.controller("app_controller", function(shared_data) {
         $scope.addStudentForm.grade.$setValidity("inRange", false);
       }
       else {
-      $scope.addStudentForm.grade.$setValidity("inRange", true);
+        $scope.addStudentForm.grade.$setValidity("inRange", true);
+      }
     }
-  }
-  this.input_name = "";
-  this.input_course = "";
-  this.input_grade = "";
-  this.all_students = [];
+    this.input_name = "";
+    this.input_course = "";
+    this.input_grade = "";
+    this.all_students = [];
   /**
    * Clear DOM inputs
    */
