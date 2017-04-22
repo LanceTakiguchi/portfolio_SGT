@@ -94,12 +94,33 @@ app.config(function ($httpProvider) {
       }
       return false;
     };
-    this.run_cake = function(my_cakes) {
-      var ref = firebase.database().ref("rooms").push(); 
-      var angel_cake = ref.child(my_cakes);
+    this.fb_ref = function() {
+      var ref = firebase.database().ref('students'); // TODO: This is what I liked
+      var obj = new $firebaseObject(ref); 
+      var updated_roster;
+      ref.on('value', function(snapshot) {
+        updated_roster = snapshot.val();
+      });  
+      return obj
+      // TODO: obj isn't the student's i am expecting
+/*      obj.$loaded().then(function(){
+        console.log(obj.$value);
+      });*/
+      // var ref = firebase.database().ref("rooms").push(); 
+      // var angel_cake = ref.child(my_cakes);
       // var angel_cake = ref;
-      return $firebaseObject(angel_cake);
+      // return $firebaseObject(angel_cake);
     }
+    this.fb_roster = function(){
+      var all_students = this.fb_ref();
+      // var keys = all_students.keys();
+      // var length = keys.length
+      // var updated_roster = [];
+      // for(i = 0; i < length; i++){
+        // updated_roster.push(all_students[keys[i]])
+      // }
+      // this.update_students(updated_roster);
+    };
   }]);
 /** controller that just calculates grade average */
 app.controller("app_controller", function(shared_data) {
@@ -115,15 +136,15 @@ app.controller("app_controller", function(shared_data) {
  app.controller("form_controller", ["$scope", "shared_data",
   function($scope, shared_data){
 
-$scope.check = function() {
-  var x = $scope.fc.input_grade;
-  if(typeof x === "undefined"){
-    $scope.addStudentForm.grade.$setPristine();
-  }
-  else if(x < 0 || x > 100){
-    $scope.addStudentForm.grade.$setValidity("inRange", false);
-  }
-  else {
+    $scope.check = function() {
+      var x = $scope.fc.input_grade;
+      if(typeof x === "undefined"){
+        $scope.addStudentForm.grade.$setPristine();
+      }
+      else if(x < 0 || x > 100){
+        $scope.addStudentForm.grade.$setValidity("inRange", false);
+      }
+      else {
       $scope.addStudentForm.grade.$setValidity("inRange", true); //TODO
     }
   }
@@ -159,7 +180,7 @@ $scope.check = function() {
  */
  app.controller("table_controller", ["$scope", "shared_data", 
   function($scope, shared_data){
-  this.students = shared_data.return_students();
+    this.students = shared_data.return_students();
   /**
    * Deletes student from shared_data
    * @param  Object student The student that is trying to be deleted
@@ -167,7 +188,8 @@ $scope.check = function() {
    this.invoke_delete = function(student) {
     shared_data.delete_student(student.id);
   };
-  shared_data.run_cake('-KiCXaNJVhvBnDdWNiwl').$bindTo($scope, "profile");
+  shared_data.fb_roster();
+  // shared_data.run_cake('-KiCXaNJVhvBnDdWNiwl').$bindTo($scope, "profile");
   // shared_data.run_cake('students').$bindTo($scope, "profile");
     // cookie.$bindTo($scope, "profile");
   // TODO
