@@ -107,9 +107,6 @@ app.config(function ($httpProvider) {
       this.students = all;
       return this.students;
     }
-    this.fb_roster = function(){
-      var all_students = this.fb_ref();
-    };
   }]);
 /** controller that just calculates grade average */
 app.controller("app_controller", function(shared_data) {
@@ -177,6 +174,5 @@ app.controller("app_controller", function(shared_data) {
    this.invoke_delete = function(student) {
     shared_data.delete_student(student.id);
   };
-  shared_data.fb_roster();
 }
 ]);
