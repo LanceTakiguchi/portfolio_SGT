@@ -3,6 +3,8 @@
  */
  var app = angular.module("sgt_app", ["firebase"]);
  var fb = firebase.database().ref('students');
+ var fb_perm = firebase.database().ref('Permanent');
+ var test;
 // loading for each http request
 app.config(function ($httpProvider) {
 })
@@ -20,6 +22,12 @@ app.config(function ($httpProvider) {
       return this.id_count;
     };
     this.grade_average = 0;
+    this.last_time = 0;
+    this.get_time = function(){
+      fb_perm.on('value', function(snapshot) {
+        this.last_time = snapshot.val().Timestamp;
+      });
+    }
   /**
    * Takes the grades from all the students and returns the average
    * @return String || Number Returns an empty string if there is no array to average, else it returns a Number average
@@ -38,11 +46,20 @@ app.config(function ($httpProvider) {
     this.grade_average = Math.round(sum / this.all_students.length);
     return this.grade_average;
   };
+  this.time_to_reset = function(){
+    var elasped = Date.now() - this.last_time;
+    // If it is more than 20 mins, return false
+    if(elasped/60000 > 20){
+      return true;
+    }
+    return false;
+  }
     /**
      * Adds student into the all_student's array
      * @param Object student An Object with the student's name, course, grade, and id
      */
      this.add_student = function(student){
+      console.log(this.time_to_reset());
       fb.push().set({
         name: student.name,
         course: student.course,
@@ -153,7 +170,6 @@ app.controller("app_controller", function(shared_data) {
     this.input_name = "";
     this.input_course = "";
     this.input_grade = "";
-    console.log(this.test_var);
   }
   /**
    * Take inputed student and add it into the shared_data
@@ -175,6 +191,7 @@ app.controller("app_controller", function(shared_data) {
  app.controller("table_controller", ["$scope", "shared_data", 
   function($scope, shared_data){
     this.students = shared_data.return_students();
+    shared_data.get_time();
   /**
    * Deletes student from shared_data
    * @param  Object student The student that is trying to be deleted
