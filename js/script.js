@@ -11,7 +11,7 @@ app.config(function ($httpProvider) {
   app.service("shared_data", ["$firebaseObject",
    function($firebaseObject){
     var shared = this;
-    // TODO: Change this.all_students into an empty array
+    // Backup, JS list of students. If Firebase doesn't work, this is a backup version.
     this.all_students = [{course: "Math", grade: 84, id: 101, name: "Lance Takiguchi"}, {course: "Woodcutting", grade: 52, id: 2, name: "Mark Johnson"}, {course: "Painting 101", grade: 73, id: 3, name: "Sally Cane"}, {course: "Using the Force", grade: 89, id: 4, name: "Luke Skywalker"}, {course: "Web Development", grade: 96, id: 5, name: "Lance T"}, {course: "Writing 39B", grade: 78, id: 6, name: "Nick Dean"}, {course: "SSBM", grade: 98, id: 7, name: "Armada"}, {course: "Math 2B", grade: 91, id: 8, name: "Kate Wilson"}];
     this.id_count = -1;
     this.id_counter = function() {
@@ -96,41 +96,19 @@ app.config(function ($httpProvider) {
       return false;
     };
     this.fb_ref = function() {
-      // var ref = firebase.database().ref('students'); // TODO: This is what I liked
       var fb = firebase.database().ref('students');
-      // var obj = new $firebaseObject(ref); 
       var obj = new $firebaseObject(fb); 
       var all = [];
       fb.on('value', function(snapshot) {
         snapshot.forEach(function(student) {
           all.push(student.val());
         });
-        this.students = all;
-        console.log("value")
       });
       this.students = all;
-/*      ref.on('value', function(snapshot) {
-        updated_roster = snapshot.val();
-      });  */
-      return all
-      // TODO: obj isn't the student's i am expecting
-/*      obj.$loaded().then(function(){
-        console.log(obj.$value);
-      });*/
-      // var ref = firebase.database().ref("rooms").push(); 
-      // var angel_cake = ref.child(my_cakes);
-      // var angel_cake = ref;
-      // return $firebaseObject(angel_cake);
+      return this.students;
     }
     this.fb_roster = function(){
       var all_students = this.fb_ref();
-      // var keys = all_students.keys();
-      // var length = keys.length
-      // var updated_roster = [];
-      // for(i = 0; i < length; i++){
-        // updated_roster.push(all_students[keys[i]])
-      // }
-      // this.update_students(updated_roster);
     };
   }]);
 /** controller that just calculates grade average */
@@ -156,7 +134,7 @@ app.controller("app_controller", function(shared_data) {
         $scope.addStudentForm.grade.$setValidity("inRange", false);
       }
       else {
-      $scope.addStudentForm.grade.$setValidity("inRange", true); //TODO
+      $scope.addStudentForm.grade.$setValidity("inRange", true);
     }
   }
   this.input_name = "";
@@ -200,23 +178,5 @@ app.controller("app_controller", function(shared_data) {
     shared_data.delete_student(student.id);
   };
   shared_data.fb_roster();
-  // shared_data.run_cake('-KiCXaNJVhvBnDdWNiwl').$bindTo($scope, "profile");
-  // shared_data.run_cake('students').$bindTo($scope, "profile");
-    // cookie.$bindTo($scope, "profile");
-  // TODO
-  // var ref = firebase.database().ref();
-  // $scope.cupcakes = $firebaseObject(ref.child('students').child('-KiCXaNJVhvBnDdWNiwl'));
-
-  // download the data into a local object
-  // var syncObject = $firebaseObject(ref);
-  // synchronize the object with a three-way data binding
-  // syncObject.$bindTo($scope, "students");
-
-  // var fb = firebase.database().ref();
-  // shared_data.test = $firebaseObject(fb);
-
-  // fb.ref('students').on('value', function(snapshot) {
-  //   updated_roster = snapshot.val();
-  // });  
 }
 ]);
