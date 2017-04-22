@@ -64,6 +64,7 @@ app.config(function ($httpProvider) {
      * @return Array An array containing all the students
      */
      this.return_students = function(){
+      this.all_students = this.fb_ref();
       return this.all_students;
     };
     /**
@@ -95,13 +96,23 @@ app.config(function ($httpProvider) {
       return false;
     };
     this.fb_ref = function() {
-      var ref = firebase.database().ref('students'); // TODO: This is what I liked
-      var obj = new $firebaseObject(ref); 
-      var updated_roster;
-      ref.on('value', function(snapshot) {
+      // var ref = firebase.database().ref('students'); // TODO: This is what I liked
+      var fb = firebase.database().ref('students');
+      // var obj = new $firebaseObject(ref); 
+      var obj = new $firebaseObject(fb); 
+      var all = [];
+      fb.on('value', function(snapshot) {
+        snapshot.forEach(function(student) {
+          all.push(student.val());
+        });
+        this.students = all;
+        console.log("value")
+      });
+      this.students = all;
+/*      ref.on('value', function(snapshot) {
         updated_roster = snapshot.val();
-      });  
-      return obj
+      });  */
+      return all
       // TODO: obj isn't the student's i am expecting
 /*      obj.$loaded().then(function(){
         console.log(obj.$value);
