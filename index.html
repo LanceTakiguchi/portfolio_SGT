@@ -83,14 +83,14 @@ Version Objective: Create a working backend either through AngularFire & Angular
         <p id="ux_details">{{fc.display("details")}}</p>
     </div>
 </div>
-<div  ng-controller="table_controller as tc" class="student-list-container col-md-9">
+<div id="table_div" ng-controller="table_controller as tc" class="student-list-container col-md-9">
     <table class="student-list table">
         <thead>
             <tr>
                 <th>Student Name</th>
                 <th>Student Course</th>
                 <th>Student Grade</th>
-                <th> {{profile.$id}}</th>
+                <th>Operation</th>
             </tr>
         </thead>
         <tbody>

@@ -25,6 +25,10 @@ body {
     font-family: 'Architects Daughter', cursive;
     font-size: 1.6em;
 }
+#table_div {
+    max-height: 72vh;
+    overflow: auto;
+}
 .footer {
     position: absolute;
     bottom: 0;
@@ -56,4 +60,9 @@ a:hover {
     -o-transition: linear 200ms;
     transition: linear 200ms;
     text-shadow: -3px 3px 8px #ffc, 3px -3px 8px #fff;
+}
+@media (max-width: 991px) {
+    #table_div {
+        max-height: 47vh;
+    }
 }
