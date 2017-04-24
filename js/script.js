@@ -86,6 +86,7 @@ app.config(function ($httpProvider) {
         course: student.course,
         grade: student.grade
       });
+      this.reset_time();
     };
     /**
      * [return_student Tells if it was able to find a student based on ID]
