@@ -16,6 +16,7 @@ app.config(function ($httpProvider) {
     var shared = this;
     // Backup, JS list of students. If Firebase doesn't work, this is a backup version.
     this.all_students = [{course: "Math", grade: 84, id: 101, name: "Lance Takiguchi"}, {course: "Woodcutting", grade: 52, id: 2, name: "Mark Johnson"}, {course: "Painting 101", grade: 73, id: 3, name: "Sally Cane"}, {course: "Using the Force", grade: 89, id: 4, name: "Luke Skywalker"}, {course: "Web Development", grade: 96, id: 5, name: "Lance T"}, {course: "Writing 39B", grade: 78, id: 6, name: "Nick Dean"}, {course: "SSBM", grade: 98, id: 7, name: "Armada"}, {course: "Math 2B", grade: 91, id: 8, name: "Kate Wilson"}];
+    this.perm_students = [];
     this.id_count = -1;
     this.id_counter = function() {
       this.id_count++;
@@ -31,7 +32,6 @@ app.config(function ($httpProvider) {
         var timestamp;
         timestamp = snapshot.val().Timestamp;
         shared.last_time = timestamp
-        console.log("last time:", timestamp);
         shared.time_to_reset(timestamp);
       });
     }
@@ -58,13 +58,11 @@ app.config(function ($httpProvider) {
    * @return {[bool]} [is it time to reset the student list & timestamp, if so run reset, else false]
    */
    this.time_to_reset = function(last_time){
-    console.log("time_to_reset last_time:", last_time)
     var elasped = Date.now() - last_time;
-    console.log("time_to_reset elasped:", elasped)
     // If it is more than 20 mins, return false
-    console.log("time_to_reset if:", (elasped/60000 > 20))
     if(elasped/60000 > 20){
       this.reset_time();
+      this.reset_fb_students();
     }
     return false;
   }
@@ -76,6 +74,18 @@ app.config(function ($httpProvider) {
       Timestamp: Date.now()
     });
   }
+  this.reset_fb_students = function(){
+    var fb_perm_students = fb_perm.child('students');
+    var all = [];
+    fb_perm_students.on('value', function(snapshot) {
+      var students = snapshot.val();
+      firebase.database().ref().update({
+        students
+      });
+    });
+this.perm_students = all;
+return all;
+}
     /**
      * Adds student into the all_student's array
      * @param Object student An Object with the student's name, course, grade, and id
@@ -122,10 +132,6 @@ app.config(function ($httpProvider) {
      */
      this.fb_ref = function() {
       // Check if it is time to reset FB student list
-      console.log("get_time:", this.get_time())
-      // if(this.get_time()){
-      //   this.reset_time();
-      // }
       var obj = new $firebaseObject(fb); 
       var all = [];
       fb.on('value', function(snapshot) {
