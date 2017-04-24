@@ -1,16 +1,20 @@
 /**
  * AngularJS main app holding all controllers
  */
-var app = angular.module("sgt_app", []);
+ var app = angular.module("sgt_app", ["firebase"]);
+ var fb = firebase.database().ref('students');
+ var fb_perm = firebase.database().ref('Permanent');
+ var test;
 // loading for each http request
 app.config(function ($httpProvider) {
 })
 /**
   * Service that holds all shared data between Angular controllers
   */
-  app.service("shared_data", function(){
+  app.service("shared_data", ["$firebaseObject",
+   function($firebaseObject){
     var shared = this;
-    // TODO: Change this.all_students into an empty array
+    // Backup, JS list of students. If Firebase doesn't work, this is a backup version.
     this.all_students = [{course: "Math", grade: 84, id: 101, name: "Lance Takiguchi"}, {course: "Woodcutting", grade: 52, id: 2, name: "Mark Johnson"}, {course: "Painting 101", grade: 73, id: 3, name: "Sally Cane"}, {course: "Using the Force", grade: 89, id: 4, name: "Luke Skywalker"}, {course: "Web Development", grade: 96, id: 5, name: "Lance T"}, {course: "Writing 39B", grade: 78, id: 6, name: "Nick Dean"}, {course: "SSBM", grade: 98, id: 7, name: "Armada"}, {course: "Math 2B", grade: 91, id: 8, name: "Kate Wilson"}];
     this.id_count = -1;
     this.id_counter = function() {
@@ -18,6 +22,18 @@ app.config(function ($httpProvider) {
       return this.id_count;
     };
     this.grade_average = 0;
+    this.last_time = 0;
+    /**
+     * [get_time gets the timestamp on FB & runs time_to_reset]
+     */
+     this.get_time = function(){
+      fb_perm.on('value', function(snapshot) {
+        var timestamp;
+        timestamp = snapshot.val().Timestamp;
+        shared.last_time = timestamp
+        shared.time_to_reset(timestamp);
+      });
+    }
   /**
    * Takes the grades from all the students and returns the average
    * @return String || Number Returns an empty string if there is no array to average, else it returns a Number average
@@ -36,14 +52,57 @@ app.config(function ($httpProvider) {
     this.grade_average = Math.round(sum / this.all_students.length);
     return this.grade_average;
   };
+  /**
+   * [time_to_reset Checks to see if the student list is older than 20 mins]
+   * @return {[bool]} [is it time to reset the student list & timestamp, if so run reset, else false]
+   */
+   this.time_to_reset = function(last_time){
+    var elasped = Date.now() - last_time;
+    // If it is more than 20 mins, return false
+    if(elasped/60000 > 20){
+      this.reset_time();
+      this.reset_fb_students();
+    }
+    return false;
+  }
+  /**
+   * [reset_time Resets the FB timestamp to this moment]
+   */
+   this.reset_time = function(){
+    fb_perm.update({
+      Timestamp: Date.now()
+    });
+  }
+  /**
+   * [reset_fb_students Resets the FB students]
+   */
+   this.reset_fb_students = function(){
+    var fb_perm_students = fb_perm.child('students');
+    fb_perm_students.on('value', function(snapshot) {
+      var students = snapshot.val();
+      firebase.database().ref().update({
+        students
+      });
+    });
+  }
     /**
      * Adds student into the all_student's array
      * @param Object student An Object with the student's name, course, grade, and id
      */
      this.add_student = function(student){
-      this.all_students.push(student);
+      fb.push().set({
+        name: student.name,
+        course: student.course,
+        grade: student.grade
+      });
+      this.reset_time();
     };
-    this.return_student = function(id){
+    /**
+     * [return_student Tells if it was able to find a student based on ID]
+     * @param  {[int]} id [a potential student's id]
+     * @return {[String or bool]}    [name of student or false]
+     */
+     this.return_student = function(id){
       for(student_index in this.all_students){
         if(this.all_students[student_index].id === id){
           return this.all_students[student_index].name;
@@ -63,37 +122,30 @@ app.config(function ($httpProvider) {
      * @return Array An array containing all the students
      */
      this.return_students = function(){
+      this.all_students = this.fb_ref();
       return this.all_students;
     };
     /**
-     * Delete's student from array based on a param id
-     * @param  Number id The id of the student to be deleted from this.all_students
-     * @return bool    Bool to tell if the operation successfully deleted the student or not
+     * [fb_ref Grabs the list of students from FB]
+     * @return {[Array]} [list of student objects]
      */
-     this.delete_student = function(id){
-      for(student_index in this.all_students){
-        if(this.all_students[student_index].id === id){
-          this.all_students.splice(student_index, 1);
-          return true;
-        }
-      }
-      return false; //Student at id was not found
+     this.fb_ref = function() {
+      // Check if it is time to reset FB student list
+      var obj = new $firebaseObject(fb); 
+      var all = [];
+      fb.on('value', function(snapshot) {
+        var length = all.length;
+        snapshot.forEach(function(student){
+          var kid = student.val();
+          kid.id = student.key; 
+          all.push(kid); // Add new updated elements
+        });
+        all.splice(0, length); // Remove old elements from array
+      });
+      this.students = all;
+      return this.students;
     }
-    /**
-     * Given an id, removes the student from the array
-     * @param  Number student_id A id of who to remove
-     * @return bool            returns if the student was removed or not
-     */
-     this.remove_student = function(student_id){
-      for(student_index in this.all_students){
-        if(this.all_students[student_index].id == student_id){
-          this.all_students.splice(student_index, 1);
-          return true;
-        }
-      }
-      return false;
-    };
-})
+  }]);
 /** controller that just calculates grade average */
 app.controller("app_controller", function(shared_data) {
   this.grade_average = shared_data.calculate_grade_average();
@@ -105,23 +157,24 @@ app.controller("app_controller", function(shared_data) {
 /**
  * Controller for the UX inputs, clear functionality, asking server to add student, and form input validation
  */
- app.controller("form_controller", function(shared_data, $scope) {
-  $scope.check = function() {
-    var x = $scope.fc.input_grade;
-    if(typeof x === "undefined"){
-      $scope.addStudentForm.grade.$setPristine();
+ app.controller("form_controller", ["$scope", "shared_data",
+  function($scope, shared_data){
+    $scope.check = function() {
+      var x = $scope.fc.input_grade;
+      if(typeof x === "undefined"){
+        $scope.addStudentForm.grade.$setPristine();
+      }
+      else if(x < 0 || x > 100){
+        $scope.addStudentForm.grade.$setValidity("inRange", false);
+      }
+      else {
+        $scope.addStudentForm.grade.$setValidity("inRange", true);
+      }
     }
-    else if(x < 0 || x > 100){
-      $scope.addStudentForm.grade.$setValidity("inRange", false);
-    }
-    else {
-      $scope.addStudentForm.grade.$setValidity("inRange", true); //TODO
-    }
-  }
-  this.input_name = "";
-  this.input_course = "";
-  this.input_grade = "";
-  this.all_students = [];
+    this.input_name = "";
+    this.input_course = "";
+    this.input_grade = "";
+    this.all_students = [];
   /**
    * Clear DOM inputs
    */
@@ -142,17 +195,22 @@ app.controller("app_controller", function(shared_data) {
     shared_data.add_student(new_student);
     this.clear_inputs();
   }
-});
+}
+]);
  /**
  * Controller for the displaying students on DOM
  */
- app.controller("table_controller", function($http, shared_data){
-  this.students = shared_data.return_students();
+ app.controller("table_controller", ["$scope", "shared_data", 
+  function($scope, shared_data){
+    this.students = shared_data.return_students();
+    shared_data.get_time();
   /**
    * Deletes student from shared_data
    * @param  Object student The student that is trying to be deleted
    */
    this.invoke_delete = function(student) {
-    shared_data.delete_student(student.id);
+    fb.child(student.id).remove();
+    shared_data.reset_time();
   };
-});
+}
+]);
