@@ -27,13 +27,14 @@ app.config(function ($httpProvider) {
      * [get_time gets the timestamp on FB & returns if it is time to reset]
      * @return {[bool]} [Is it time to reset the timestamp]
      */
-    this.get_time = function(){
-      var is_time_to_reset;
+     this.get_time = function(){
       fb_perm.on('value', function(snapshot) {
-        shared.last_time = snapshot.val().Timestamp;
-        is_time_to_reset = shared.time_to_reset(shared.last_time);
+        var timestamp;
+        timestamp = snapshot.val().Timestamp;
+        shared.last_time = timestamp
+        console.log("last time:", timestamp);
+        shared.time_to_reset(timestamp);
       });
-      return is_time_to_reset;
     }
   /**
    * Takes the grades from all the students and returns the average
@@ -58,10 +59,13 @@ app.config(function ($httpProvider) {
    * @return {[bool]} [is it time to reset the student list & timestamp]
    */
    this.time_to_reset = function(last_time){
+    console.log("time_to_reset last_time:", last_time)
     var elasped = Date.now() - last_time;
+    console.log("time_to_reset elasped:", elasped)
     // If it is more than 20 mins, return false
+    console.log("time_to_reset if:", (elasped/60000 > 20))
     if(elasped/60000 > 20){
-      return true;
+      this.reset_time();
     }
     return false;
   }
@@ -69,7 +73,7 @@ app.config(function ($httpProvider) {
    * [reset_time Resets the FB timestamp to this moment]
    * @return {[int]} [The current moment of time in milliseconds]
    */
-  this.reset_time = function(){
+   this.reset_time = function(){
     fb_perm.update({
       Timestamp: Date.now()
     });
@@ -90,7 +94,7 @@ app.config(function ($httpProvider) {
      * @param  {[int]} id [a potential student's id]
      * @return {[String or bool]}    [name of student or false]
      */
-    this.return_student = function(id){
+     this.return_student = function(id){
       for(student_index in this.all_students){
         if(this.all_students[student_index].id === id){
           return this.all_students[student_index].name;
@@ -145,11 +149,12 @@ app.config(function ($httpProvider) {
      * [fb_ref Grabs the list of students from FB]
      * @return {[Array]} [list of student objects]
      */
-    this.fb_ref = function() {
+     this.fb_ref = function() {
       // Check if it is time to reset FB student list
-      if(this.get_time()){
-        this.reset_time();
-      }
+      console.log("get_time:", this.get_time())
+      // if(this.get_time()){
+      //   this.reset_time();
+      // }
       var obj = new $firebaseObject(fb); 
       var all = [];
       fb.on('value', function(snapshot) {
@@ -178,7 +183,6 @@ app.controller("app_controller", function(shared_data) {
  */
  app.controller("form_controller", ["$scope", "shared_data",
   function($scope, shared_data){
-
     $scope.check = function() {
       var x = $scope.fc.input_grade;
       if(typeof x === "undefined"){
