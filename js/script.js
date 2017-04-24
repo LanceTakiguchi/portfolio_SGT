@@ -23,10 +23,17 @@ app.config(function ($httpProvider) {
     };
     this.grade_average = 0;
     this.last_time = 0;
+    /**
+     * [get_time gets the timestamp on FB & returns if it is time to reset]
+     * @return {[bool]} [Is it time to reset the timestamp]
+     */
     this.get_time = function(){
+      var is_time_to_reset;
       fb_perm.on('value', function(snapshot) {
-        this.last_time = snapshot.val().Timestamp;
+        shared.last_time = snapshot.val().Timestamp;
+        is_time_to_reset = shared.time_to_reset(shared.last_time);
       });
+      return is_time_to_reset;
     }
   /**
    * Takes the grades from all the students and returns the average
@@ -46,26 +53,43 @@ app.config(function ($httpProvider) {
     this.grade_average = Math.round(sum / this.all_students.length);
     return this.grade_average;
   };
-  this.time_to_reset = function(){
-    var elasped = Date.now() - this.last_time;
+  /**
+   * [time_to_reset Checks to see if the student list is older than 20 mins]
+   * @return {[bool]} [is it time to reset the student list & timestamp]
+   */
+   this.time_to_reset = function(last_time){
+    var elasped = Date.now() - last_time;
     // If it is more than 20 mins, return false
     if(elasped/60000 > 20){
       return true;
     }
     return false;
   }
+  /**
+   * [reset_time Resets the FB timestamp to this moment]
+   * @return {[int]} [The current moment of time in milliseconds]
+   */
+  this.reset_time = function(){
+    fb_perm.update({
+      Timestamp: Date.now()
+    });
+  }
     /**
      * Adds student into the all_student's array
      * @param Object student An Object with the student's name, course, grade, and id
      */
      this.add_student = function(student){
-      console.log(this.time_to_reset());
       fb.push().set({
         name: student.name,
         course: student.course,
         grade: student.grade
       });
     };
+    /**
+     * [return_student Tells if it was able to find a student based on ID]
+     * @param  {[int]} id [a potential student's id]
+     * @return {[String or bool]}    [name of student or false]
+     */
     this.return_student = function(id){
       for(student_index in this.all_students){
         if(this.all_students[student_index].id === id){
@@ -117,7 +141,15 @@ app.config(function ($httpProvider) {
       }
       return false;
     };
+    /**
+     * [fb_ref Grabs the list of students from FB]
+     * @return {[Array]} [list of student objects]
+     */
     this.fb_ref = function() {
+      // Check if it is time to reset FB student list
+      if(this.get_time()){
+        this.reset_time();
+      }
       var obj = new $firebaseObject(fb); 
       var all = [];
       fb.on('value', function(snapshot) {
