@@ -24,8 +24,7 @@ app.config(function ($httpProvider) {
     this.grade_average = 0;
     this.last_time = 0;
     /**
-     * [get_time gets the timestamp on FB & returns if it is time to reset]
-     * @return {[bool]} [Is it time to reset the timestamp]
+     * [get_time gets the timestamp on FB & runs time_to_reset]
      */
      this.get_time = function(){
       fb_perm.on('value', function(snapshot) {
@@ -56,7 +55,7 @@ app.config(function ($httpProvider) {
   };
   /**
    * [time_to_reset Checks to see if the student list is older than 20 mins]
-   * @return {[bool]} [is it time to reset the student list & timestamp]
+   * @return {[bool]} [is it time to reset the student list & timestamp, if so run reset, else false]
    */
    this.time_to_reset = function(last_time){
     console.log("time_to_reset last_time:", last_time)
@@ -71,7 +70,6 @@ app.config(function ($httpProvider) {
   }
   /**
    * [reset_time Resets the FB timestamp to this moment]
-   * @return {[int]} [The current moment of time in milliseconds]
    */
    this.reset_time = function(){
     fb_perm.update({
