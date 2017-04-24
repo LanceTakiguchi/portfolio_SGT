@@ -117,34 +117,6 @@ app.config(function ($httpProvider) {
       return this.all_students;
     };
     /**
-     * Delete's student from array based on a param id
-     * @param  Number id The id of the student to be deleted from this.all_students
-     * @return bool    Bool to tell if the operation successfully deleted the student or not
-     */
-     this.delete_student = function(id){
-      for(student_index in this.all_students){
-        if(this.all_students[student_index].id === id){
-          this.all_students.splice(student_index, 1);
-          return true;
-        }
-      }
-      return false; //Student at id was not found
-    }
-    /**
-     * Given an id, removes the student from the array
-     * @param  Number student_id A id of who to remove
-     * @return bool            returns if the student was removed or not
-     */
-     this.remove_student = function(student_id){
-      for(student_index in this.all_students){
-        if(this.all_students[student_index].id == student_id){
-          this.all_students.splice(student_index, 1);
-          return true;
-        }
-      }
-      return false;
-    };
-    /**
      * [fb_ref Grabs the list of students from FB]
      * @return {[Array]} [list of student objects]
      */
@@ -233,6 +205,7 @@ app.controller("app_controller", function(shared_data) {
    */
    this.invoke_delete = function(student) {
     fb.child(student.id).remove();
+    shared_data.reset_time();
   };
 }
 ]);
