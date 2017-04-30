@@ -66,3 +66,30 @@ a:hover {
         max-height: 47vh;
     }
 }
+@media (max-width: 500px) {
+    #table_div {
+        max-height: 40vh;
+    }
+    .footer {
+        height: 80px;
+        background-color: rgba(155, 155, 155, 0.75);
+    }
+    .footer .container div {
+        display: inline-block;
+        margin-left: 3em;
+    }
+    #my_website {
+        margin-left: 4.5em;
+    }
+}
+@media (max-width: 400px) {
+    #table_div {
+        max-height: 32vh;
+    }
+    .footer .container div {
+        margin-left: 0.25em;
+    }
+    #my_website {
+        margin-left: 0.5em;
+    }
+}
