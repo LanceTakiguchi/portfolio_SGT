@@ -11,6 +11,12 @@
 
 ![alt tag](http://lancetakiguchi.com/assets/images/apps/sgt_app.png?raw=true "SGT pv1.0 | Lance Takiguchi App")
 
+## Version pv3.0
+* Date: 2017/04/30
+
+#### Description: Add edit and sort features to the table. Other small UX fixes.
+
+
 ## Version pv2.0
 * Date: 2017/04/20
 
