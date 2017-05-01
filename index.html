@@ -88,7 +88,7 @@ Version Objective: Create a working backend either through AngularFire & Angular
             <thead>
                 <tr>
                     <th>
-                        <button ng-click="tc.sortBy('name')">Name</button>
+                        <button type='button' class="btn btn-info" ng-click="tc.sortBy('name')">Name</button>
                         <span class="sortorder" ng-show="propertyName === 'name'" ng-class="{reverse: reverse}"></span>
                     </th>
                     <th>Student Course</th>
