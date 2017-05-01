@@ -94,7 +94,7 @@ Version Objective: Create a working backend either through AngularFire & Angular
             </tr>
         </thead>
         <tbody>
-            <tr ng-repeat="student in tc.students">
+            <tr ng-repeat="student in tc.students | orderBy: 'name'">
                 <td>{{student.name}}</td>
                 <td>{{student.course}}</td>
                 <td>{{student.grade}}</td>
