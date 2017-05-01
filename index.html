@@ -47,67 +47,70 @@ Version Objective: Create a working backend either through AngularFire & Angular
                         <input name="name" ng-model="fc.input_name" type="text" class="form-control" name="studentName" placeholder="Student Name" required>
                         <span class="glyphicon glyphicon-ok form-control-feedback" aria-hidden="true" ng-show="addStudentForm.name.$valid"></span>
                     </div>
-              </div>
-              <div class="form-group" id="studentCourse" ng-class="{'has-success': addStudentForm.course.$valid}">
-                <div class="input-group">
-                    <span class="input-group-addon">
-                        <span class="glyphicon glyphicon-list-alt"></span>
-                    </span>
-                    <input name="course" ng-model="fc.input_course" type="text" class="form-control" name="course" placeholder="Student Course" required>
-                    <span class="glyphicon glyphicon-ok form-control-feedback" aria-hidden="true" ng-show="addStudentForm.course.$valid && addStudentForm.course.$dirty"></span>
                 </div>
+                <div class="form-group" id="studentCourse" ng-class="{'has-success': addStudentForm.course.$valid}">
+                    <div class="input-group">
+                        <span class="input-group-addon">
+                            <span class="glyphicon glyphicon-list-alt"></span>
+                        </span>
+                        <input name="course" ng-model="fc.input_course" type="text" class="form-control" name="course" placeholder="Student Course" required>
+                        <span class="glyphicon glyphicon-ok form-control-feedback" aria-hidden="true" ng-show="addStudentForm.course.$valid && addStudentForm.course.$dirty"></span>
+                    </div>
+                </div>
+                <div class="form-group" id="studentGrade" ng-class="{'has-error': addStudentForm.grade.$invalid && addStudentForm.grade.$dirty, 'has-success': addStudentForm.grade.$valid}">
+                    <div class="input-group">
+                        <span class="input-group-addon">
+                            <span class="glyphicon glyphicon-education"></span>
+                        </span>
+                        <input id="form_grade" name="grade" ng-model="fc.input_grade" type="number" class="form-control" name="studentGrade"
+                        placeholder="Student Grade" ng-keyup="check()" required>
+                        <span class="glyphicon glyphicon-remove form-control-feedback" aria-hidden="true" ng-show="addStudentForm.grade.$invalid && addStudentForm.grade.$dirty"></span>
+                        <span class="glyphicon glyphicon-ok form-control-feedback" aria-hidden="true" ng-show="addStudentForm.grade.$valid && addStudentForm.grade.$dirty"></span>
+                    </div>
+                    <div id="invalid_grade" role="alert">
+                      <span class="error help-block" ng-show="addStudentForm.grade.$invalid && addStudentForm.grade.$dirty"> A grade between 0 and 100 is required! </span>
+                  </div>
+              </div>
+              <div class="control-group">
+                <button id="addButton" type="submit" class="btn btn-success" onclick="" ng-disabled="addStudentForm.$invalid">Add Student</button>
+                <button ng-click="fc.clear_inputs(); addStudentForm.grade.$setPristine()" id="cancelButton" type="button" class="btn btn-default" onclick="">Clear</button>
             </div>
-            <div class="form-group" id="studentGrade" ng-class="{'has-error': addStudentForm.grade.$invalid && addStudentForm.grade.$dirty, 'has-success': addStudentForm.grade.$valid}">
-                <div class="input-group">
-                    <span class="input-group-addon">
-                        <span class="glyphicon glyphicon-education"></span>
-                    </span>
-                    <input id="form_grade" name="grade" ng-model="fc.input_grade" type="number" class="form-control" name="studentGrade"
-                    placeholder="Student Grade" ng-keyup="check()" required>
-                    <span class="glyphicon glyphicon-remove form-control-feedback" aria-hidden="true" ng-show="addStudentForm.grade.$invalid && addStudentForm.grade.$dirty"></span>
-                    <span class="glyphicon glyphicon-ok form-control-feedback" aria-hidden="true" ng-show="addStudentForm.grade.$valid && addStudentForm.grade.$dirty"></span>
-                </div>
-                <div id="invalid_grade" role="alert">
-                  <span class="error help-block" ng-show="addStudentForm.grade.$invalid && addStudentForm.grade.$dirty"> A grade between 0 and 100 is required! </span>
-              </div>
-          </div>
-          <div class="control-group">
-            <button id="addButton" type="submit" class="btn btn-success" onclick="" ng-disabled="addStudentForm.$invalid">Add Student</button>
-            <button ng-click="fc.clear_inputs(); addStudentForm.grade.$setPristine()" id="cancelButton" type="button" class="btn btn-default" onclick="">Clear</button>
+        </form>
+        <div id="student_loading"></div>
+        <br>
+        <div id="ux_display">
+            <h4 id="ux_title">{{fc.display("title")}}</h4>
+            <p id="ux_details">{{fc.display("details")}}</p>
         </div>
-    </form>
-    <div id="student_loading"></div>
-    <br>
-    <div id="ux_display">
-        <h4 id="ux_title">{{fc.display("title")}}</h4>
-        <p id="ux_details">{{fc.display("details")}}</p>
     </div>
-</div>
-<div id="table_div" ng-controller="table_controller as tc" class="student-list-container col-md-9">
-    <table class="student-list table">
-        <thead>
-            <tr>
-                <th>Student Name</th>
-                <th>Student Course</th>
-                <th>Student Grade</th>
-                <th>Operation</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr ng-repeat="student in tc.students | orderBy: 'name'">
-                <td>{{student.name}}</td>
-                <td>{{student.course}}</td>
-                <td>{{student.grade}}</td>
-                <td><button ng-click="tc.invoke_delete(student)" type='button' class='btn btn-danger' onclick=''>Delete</button></td>
-            </tr>
-        </tbody>
-    </table>
-</div>
+    <div id="table_div" ng-controller="table_controller as tc" class="student-list-container col-md-9">
+        <table class="student-list table">
+            <thead>
+                <tr>
+                    <th>
+                        <button ng-click="tc.sortBy('name')">Name</button>
+                        <span class="sortorder" ng-show="propertyName === 'name'" ng-class="{reverse: reverse}"></span>
+                    </th>
+                    <th>Student Course</th>
+                    <th>Student Grade</th>
+                    <th>Operation</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="student in tc.students | orderBy:propertyName:reverse">
+                    <td>{{student.name}}</td>
+                    <td>{{student.course}}</td>
+                    <td>{{student.grade}}</td>
+                    <td><button ng-click="tc.invoke_delete(student)" type='button' class='btn btn-danger' onclick=''>Delete</button></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
 </div>
 <footer id="contact" class="footer">
     <div class="container"> 
-       <div id="my_website"> <p class="text-center"> <a href="http://www.lancetakiguchi.com" target="_blank"> Lance Takiguchi </a> </p> </div>
-       <div>
+     <div id="my_website"> <p class="text-center"> <a href="http://www.lancetakiguchi.com" target="_blank"> Lance Takiguchi </a> </p> </div>
+     <div>
         <ul class="list-unstyled list-inline text-center">
             <li><p id="contact_links"><a href="https://www.linkedin.com/in/lancetakiguchi" target="_blank"><i id="linkedin" class="fa fa-linkedin-square" aria-hidden="true"></i></a></p></li>
             <li><p><a href="https://github.com/LanceTakiguchi/portfolio_SGT" target="_blank"><i id="github" class="fa fa-github" aria-hidden="true"></i></a></p></li>

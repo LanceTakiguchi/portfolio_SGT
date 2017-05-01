@@ -212,5 +212,9 @@ app.controller("app_controller", function(shared_data) {
     fb.child(student.id).remove();
     shared_data.reset_time();
   };
+  this.sortBy = function(propertyName) {
+    $scope.reverse = ($scope.propertyName === propertyName) ? !$scope.reverse : false;
+    $scope.propertyName = propertyName;
+  };
 }
 ]);

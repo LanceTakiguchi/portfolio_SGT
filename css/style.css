@@ -61,6 +61,14 @@ a:hover {
     transition: linear 200ms;
     text-shadow: -3px 3px 8px #ffc, 3px -3px 8px #fff;
 }
+/* Sort */
+.sortorder:after {
+  content: '\25b2';   // BLACK UP-POINTING TRIANGLE
+}
+.sortorder.reverse:after {
+  content: '\25bc';   // BLACK DOWN-POINTING TRIANGLE
+}
+
 @media (max-width: 991px) {
     #table_div {
         max-height: 47vh;
