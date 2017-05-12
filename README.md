@@ -76,5 +76,4 @@ it is a great display of AngularJS.
 * Application descriptions.
 * Displaying a loading icon for UX.
 * Fix the inputs section as sticky on the screen, just for smaller resolutions.
-* Edit existing student entries data
-* Sort the students by name, course, or grade.
+* Delete confirmation
