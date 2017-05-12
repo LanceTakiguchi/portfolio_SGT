@@ -103,7 +103,7 @@ Version Objective: Create a working backend either through AngularFire & Angular
                 </tr>
             </thead>
             <tbody>
-                <tr ng-hide="tc.editorEnabled" ng-repeat="student in tc.students | orderBy:propertyName:reverse">
+                <tr ng-repeat="student in tc.students | orderBy:propertyName:reverse">
                     <td>{{student.name}}</td>
                     <td>{{student.course}}</td>
                     <td>{{student.grade}}</td>
@@ -113,9 +113,9 @@ Version Objective: Create a working backend either through AngularFire & Angular
                     </td>
                 </tr>
                 <tr ng-show="tc.editorEnabled">
-                    <td><input></td>
-                    <td><input></td>
-                    <td><input></td>
+                    <td><input ng-model="tc.edit_name"></td>
+                    <td><input ng-model="tc.edit_course"></td>
+                    <td><input ng-model="tc.edit_grade"></td>
                     <td>
                         <button ng-click="" type='button' class='btn btn-primary' onclick=''>Save</button>
                         <button ng-click="" type='button' class='btn btn-danger btn-space' onclick=''>Cancel</button>

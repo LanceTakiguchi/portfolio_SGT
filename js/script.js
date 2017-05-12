@@ -217,7 +217,10 @@ app.controller("app_controller", function(shared_data) {
   };
   this.edit = function(student){
     this.invoke_delete(student);
-
+    this.editorEnabled = true;
+    this.edit_name = student.name;
+    this.edit_course = student.course;
+    this.edit_grade = student.grade;
   };
   this.editorEnabled = false;
 }
