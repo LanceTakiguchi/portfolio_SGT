@@ -14,7 +14,7 @@ app.config(function ($httpProvider) {
   app.service("shared_data", ["$firebaseObject",
    function($firebaseObject){
     var shared = this;
-    this.all_students;
+    this.all_students = [];
     this.id_count = -1;
     this.id_counter = function() {
       this.id_count++;
