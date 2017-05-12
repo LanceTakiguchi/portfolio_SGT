@@ -61,6 +61,9 @@ a:hover {
     transition: linear 200ms;
     text-shadow: -3px 3px 8px #ffc, 3px -3px 8px #fff;
 }
+.btn-space {
+    margin-left: 5px;
+}
 /* Sort */
 .sortorder:after {
   content: '\25b2';   // BLACK UP-POINTING TRIANGLE
