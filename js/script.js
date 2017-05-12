@@ -217,6 +217,8 @@ app.controller("app_controller", function(shared_data) {
   };
   this.edit = function(student){
     this.invoke_delete(student);
+
   };
+  this.editorEnabled = false;
 }
 ]);

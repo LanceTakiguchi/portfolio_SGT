@@ -103,13 +103,22 @@ Version Objective: Create a working backend either through AngularFire & Angular
                 </tr>
             </thead>
             <tbody>
-                <tr ng-repeat="student in tc.students | orderBy:propertyName:reverse">
+                <tr ng-hide="tc.editorEnabled" ng-repeat="student in tc.students | orderBy:propertyName:reverse">
                     <td>{{student.name}}</td>
                     <td>{{student.course}}</td>
                     <td>{{student.grade}}</td>
                     <td>
-                    <button ng-click="tc.edit(student)" type='button' class='btn btn-primary' onclick=''><span class="glyphicon glyphicon-edit"></span></button>
-                    <button ng-click="tc.invoke_delete(student)" type='button' class='btn btn-danger btn-space' onclick=''><span class="glyphicon glyphicon-trash"></span></button>
+                        <button ng-click="tc.edit(student)" type='button' class='btn btn-primary' onclick=''><span class="glyphicon glyphicon-edit"></span></button>
+                        <button ng-click="tc.invoke_delete(student)" type='button' class='btn btn-danger btn-space' onclick=''><span class="glyphicon glyphicon-trash"></span></button>
+                    </td>
+                </tr>
+                <tr ng-show="tc.editorEnabled">
+                    <td><input></td>
+                    <td><input></td>
+                    <td><input></td>
+                    <td>
+                        <button ng-click="" type='button' class='btn btn-primary' onclick=''>Save</button>
+                        <button ng-click="" type='button' class='btn btn-danger btn-space' onclick=''>Cancel</button>
                     </td>
                 </tr>
             </tbody>
@@ -118,8 +127,8 @@ Version Objective: Create a working backend either through AngularFire & Angular
 </div>
 <footer id="contact" class="footer">
     <div class="container"> 
-     <div id="my_website"> <p class="text-center"> <a href="http://www.lancetakiguchi.com" target="_blank"> Lance Takiguchi </a> </p> </div>
-     <div>
+       <div id="my_website"> <p class="text-center"> <a href="http://www.lancetakiguchi.com" target="_blank"> Lance Takiguchi </a> </p> </div>
+       <div>
         <ul class="list-unstyled list-inline text-center">
             <li><p id="contact_links"><a href="https://www.linkedin.com/in/lancetakiguchi" target="_blank"><i id="linkedin" class="fa fa-linkedin-square" aria-hidden="true"></i></a></p></li>
             <li><p><a href="https://github.com/LanceTakiguchi/portfolio_SGT" target="_blank"><i id="github" class="fa fa-github" aria-hidden="true"></i></a></p></li>
