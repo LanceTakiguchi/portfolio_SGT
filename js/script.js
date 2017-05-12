@@ -215,5 +215,8 @@ app.controller("app_controller", function(shared_data) {
     $scope.reverse = ($scope.propertyName === propertyName) ? !$scope.reverse : false;
     $scope.propertyName = propertyName;
   };
+  this.edit = function(student){
+    this.invoke_delete(student);
+  };
 }
 ]);
