@@ -228,16 +228,27 @@ app.controller("app_controller", function(shared_data) {
   };
   this.editorEnabled = false;
   this.save = function(name, course, grade){
-    var new_student = {};
-    new_student.name = name;
-    new_student.course = course;
-    new_student.grade = grade;
-    shared_data.add_student(new_student);
-    this.editorEnabled = false;
+    if(this.check_grade(grade)){
+      var new_student = {};
+      new_student.name = name;
+      new_student.course = course;
+      new_student.grade = grade;
+      shared_data.add_student(new_student);
+      this.editorEnabled = false;
+    }
   };
   this.cancel = function(){
     shared_data.add_student(this.no_edit);
     this.editorEnabled = false;
   };
+  this.check_grade = function(x){
+    if(x < 0 || x > 100){
+      this.grade_val = false;
+      return false;
+    }
+    this.grade_val = true;
+    return true
+  }
+  this.grade_val = false;
 }
 ]);
