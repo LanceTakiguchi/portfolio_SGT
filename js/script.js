@@ -190,7 +190,6 @@ app.controller("app_controller", function(shared_data) {
     new_student.name = this.input_name;
     new_student.course = this.input_course;
     new_student.grade = this.input_grade;
-    new_student.id = shared_data.id_counter();
     shared_data.add_student(new_student);
     this.clear_inputs();
   }
@@ -223,5 +222,14 @@ app.controller("app_controller", function(shared_data) {
     this.edit_grade = student.grade;
   };
   this.editorEnabled = false;
+  this.save = function(name, course, grade){
+    var new_student = {};
+    new_student.name = name;
+    new_student.course = course;
+    new_student.grade = grade;
+    shared_data.add_student(new_student);
+    this.editorEnabled = false;
+  };
+
 }
 ]);

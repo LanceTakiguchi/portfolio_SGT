@@ -108,8 +108,8 @@ Version Objective: Create a working backend either through AngularFire & Angular
                     <td>{{student.course}}</td>
                     <td>{{student.grade}}</td>
                     <td>
-                        <button ng-click="tc.edit(student)" type='button' class='btn btn-primary' onclick=''><span class="glyphicon glyphicon-edit"></span></button>
-                        <button ng-click="tc.invoke_delete(student)" type='button' class='btn btn-danger btn-space' onclick=''><span class="glyphicon glyphicon-trash"></span></button>
+                        <button ng-click="tc.edit(student)" type='button' class='btn btn-primary'><span class="glyphicon glyphicon-edit"></span></button>
+                        <button ng-click="tc.invoke_delete(student)" type='button' class='btn btn-danger btn-space'><span class="glyphicon glyphicon-trash"></span></button>
                     </td>
                 </tr>
                 <tr ng-show="tc.editorEnabled">
@@ -117,7 +117,7 @@ Version Objective: Create a working backend either through AngularFire & Angular
                     <td><input ng-model="tc.edit_course"></td>
                     <td><input ng-model="tc.edit_grade"></td>
                     <td>
-                        <button ng-click="" type='button' class='btn btn-primary' onclick=''>Save</button>
+                        <button ng-click="tc.save(tc.edit_name, tc.edit_course, tc.edit_grade)" type='button' class='btn btn-primary' onclick=''>Save</button>
                         <button ng-click="" type='button' class='btn btn-danger btn-space' onclick=''>Cancel</button>
                     </td>
                 </tr>
