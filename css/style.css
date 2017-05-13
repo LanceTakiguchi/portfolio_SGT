@@ -10,8 +10,8 @@
     margin-top: 1em;
 }
 /*Adjust number selector location*/
-input[type=number]::-webkit-inner-spin-button, 
-input[type=number]::-webkit-outer-spin-button { 
+#form_grade[type=number]::-webkit-inner-spin-button, 
+#form_grade[type=number]::-webkit-outer-spin-button { 
     /*-webkit-appearance: none;*/
     /*-moz-appearance: none;*/
     /*appearance: none;*/
