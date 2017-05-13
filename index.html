@@ -107,7 +107,7 @@ Version Objective: Create a working backend either through AngularFire & Angular
                     <td>{{student.name}}</td>
                     <td>{{student.course}}</td>
                     <td>{{student.grade}}</td>
-                    <td>
+                    <td class="op_buttons">
                         <button ng-click="tc.edit(student)" type='button' class='btn btn-primary'><span class="glyphicon glyphicon-edit"></span></button>
                         <button ng-click="tc.invoke_delete(student)" type='button' class='btn btn-danger btn-space'><span class="glyphicon glyphicon-trash"></span></button>
                     </td>
@@ -116,7 +116,7 @@ Version Objective: Create a working backend either through AngularFire & Angular
                     <td><input ng-model="tc.edit_name"></td>
                     <td><input ng-model="tc.edit_course"></td>
                     <td><input ng-model="tc.edit_grade" type="number" min="0" max="100"></td>
-                    <td>
+                    <td class="op_buttons">
                         <button ng-click="tc.save(tc.edit_name, tc.edit_course, tc.edit_grade)" type='button' class='btn btn-primary' onclick=''><span class="glyphicon glyphicon-floppy-saved"></span></button>
                         <button ng-click="tc.cancel()" type='button' class='btn btn-space' onclick=''><span class="glyphicon glyphicon-ban-circle"></span></button>
                     </td>

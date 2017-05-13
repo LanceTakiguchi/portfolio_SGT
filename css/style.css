@@ -71,7 +71,9 @@ a:hover {
 .sortorder.reverse:after {
   content: '\25bc';   // BLACK DOWN-POINTING TRIANGLE
 }
-
+.op_buttons {
+    min-width: 110px;
+}
 @media (max-width: 991px) {
     #table_div {
         max-height: 47vh;
