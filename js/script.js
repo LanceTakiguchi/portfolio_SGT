@@ -220,6 +220,11 @@ app.controller("app_controller", function(shared_data) {
     this.edit_name = student.name;
     this.edit_course = student.course;
     this.edit_grade = student.grade;
+    this.no_edit = {
+      name: student.name,
+      course: student.course,
+      grade: student.grade
+    };
   };
   this.editorEnabled = false;
   this.save = function(name, course, grade){
@@ -228,6 +233,10 @@ app.controller("app_controller", function(shared_data) {
     new_student.course = course;
     new_student.grade = grade;
     shared_data.add_student(new_student);
+    this.editorEnabled = false;
+  };
+  this.cancel = function(){
+    shared_data.add_student(this.no_edit);
     this.editorEnabled = false;
   };
 }
