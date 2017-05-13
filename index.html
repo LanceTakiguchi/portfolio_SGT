@@ -115,7 +115,7 @@ Version Objective: Create a working backend either through AngularFire & Angular
                 <tr ng-show="tc.editorEnabled">
                     <td><input ng-model="tc.edit_name"></td>
                     <td><input ng-model="tc.edit_course"></td>
-                    <td><input ng-model="tc.edit_grade"></td>
+                    <td><input ng-model="tc.edit_grade" type="number" min="0" max="100"></td>
                     <td>
                         <button ng-click="tc.save(tc.edit_name, tc.edit_course, tc.edit_grade)" type='button' class='btn btn-primary' onclick=''><span class="glyphicon glyphicon-floppy-saved"></span></button>
                         <button ng-click="tc.cancel()" type='button' class='btn btn-space' onclick=''><span class="glyphicon glyphicon-ban-circle"></span></button>
