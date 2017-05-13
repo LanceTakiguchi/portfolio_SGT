@@ -230,6 +230,5 @@ app.controller("app_controller", function(shared_data) {
     shared_data.add_student(new_student);
     this.editorEnabled = false;
   };
-
 }
 ]);
