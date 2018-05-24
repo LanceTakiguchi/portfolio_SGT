@@ -4,12 +4,17 @@
 * Description: Student Grade Table: An application for teachers to view student grade records. They can add, edit, or delete students and their records. Utilizes Bootstrap and AngularJS. Plans to three-way bind with Firebase.
 
 ## Live Link
-* http://lancetakiguchi.com/apps/sgt_app/
+* https://lancetakiguchi.github.io/sgt/
 
 ## Portfolio
-* http://lancetakiguchi.com/
+* To be updated
 
 ![alt tag](http://lancetakiguchi.com/assets/images/apps/sgt_app.png?raw=true "SGT pv1.0 | Lance Takiguchi App")
+
+## Changed to Github Pages
+* Date: 2018/05/23
+* Description: Changed project to be hosted on Github Pages, having deactivated my website, lancetakiguchi.com
+* Note: There a number of styling bugs that has occurred do to this in hosting. These are to be fixed in the future.
 
 ## Version pv3.0
 * Date: 2017/04/30
